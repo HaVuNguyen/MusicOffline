@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">IMusic</string>
+    <string name="tv_back">Back</string>
+    <string name="tv_search">Search</string>
+    <string name="tv_my_music">My Music</string>
 </resources>

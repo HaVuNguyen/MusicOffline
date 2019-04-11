@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/layout_top"
+        layout="@layout/layout_navigation" />
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#7FC0E0"
+        app:layout_constraintTop_toBottomOf="@id/layout_top"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Music"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/view_top">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:contentDescription="@string/tv_search"
+            android:src="@drawable/ic_search" />
+
+        <EditText
+            android:id="@+id/ed_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/tv_search"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="#222222"
+            tools:ignore="Autofill" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view_bottom_search"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="#7FC0E0"
+        app:layout_constraintTop_toBottomOf="@id/layout_search" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_bottom_search"
+        tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

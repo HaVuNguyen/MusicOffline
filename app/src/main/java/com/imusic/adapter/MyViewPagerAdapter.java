@@ -1,9 +1,13 @@
-package com.imusic;
+package com.imusic.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.imusic.fragment.FavoriteFragment;
+import com.imusic.fragment.MusicFragment;
+import com.imusic.fragment.PlaylistFragment;
 
 public class MyViewPagerAdapter extends FragmentPagerAdapter {
     private static final int NUM_PAGER = 3;

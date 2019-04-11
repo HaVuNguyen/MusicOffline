@@ -1,4 +1,4 @@
-package com.imusic;
+package com.imusic.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,21 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MusicFragment extends Fragment {
+import com.imusic.R;
+
+public class PlaylistFragment extends Fragment {
 
     private int mPage;
     private String mTitle;
 
-    public MusicFragment() {
+    public PlaylistFragment() {
     }
 
-    public static MusicFragment newInstance(int page, String title) {
-        MusicFragment musicFragment = new MusicFragment();
+    public static PlaylistFragment newInstance(int page, String title) {
+        PlaylistFragment playlistFragment = new PlaylistFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
         args.putString("title", title);
-        musicFragment.setArguments(args);
-        return musicFragment;
+        playlistFragment.setArguments(args);
+        return playlistFragment;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class MusicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_music, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_playlist, container, false);
         return rootView;
     }
 }
