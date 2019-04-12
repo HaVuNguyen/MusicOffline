@@ -3,4 +3,7 @@
     <string name="tv_back">Back</string>
     <string name="tv_search">Search</string>
     <string name="tv_my_music">My Music</string>
+    <string name="tv_song">SONG</string>
+    <string name="tv_playlist">PLAYLIST</string>
+    <string name="tv_favorite">FAVORITE</string>
 </resources>
