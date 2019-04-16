@@ -6,4 +6,9 @@
     <string name="tv_song">SONG</string>
     <string name="tv_playlist">PLAYLIST</string>
     <string name="tv_favorite">FAVORITE</string>
+    <string name="tv_no_songs">No songs</string>
+    <string name="tv_previous">Previous</string>
+    <string name="tv_play">Play</string>
+    <string name="tv_playing">Playing Music</string>
+    <string name="tv_next">Next</string>
 </resources>

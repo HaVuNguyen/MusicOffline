@@ -1,6 +1,6 @@
 package com.imusic.fragment.song;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,27 +10,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imusic.R;
+import com.imusic.listeners.IOnClickSongListener;
+import com.imusic.listeners.ItemTouchHelperAdapter;
+import com.imusic.listeners.ItemTouchHelperViewHolder;
 import com.imusic.models.Song;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
-    private ArrayList<Song> mSongs;
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> implements ItemTouchHelperAdapter {
+    private ArrayList<Song> mSongs = null;
     private View.OnClickListener mOnClickListener;
+    private IOnClickSongListener mListener;
 
-    public SongAdapter( ArrayList<Song> songs) {
+    public SongAdapter(ArrayList<Song> songs) {
         this.mSongs = songs;
     }
 
-    public void setOnClickListener(View.OnClickListener onClickListener){
-        this.mOnClickListener = onClickListener;
+    public void setOnClickListener(IOnClickSongListener onClickListener) {
+        this.mListener = onClickListener;
     }
 
     @NonNull
     @Override
     public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_music,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_music, viewGroup, false);
         view.setOnClickListener(mOnClickListener);
         return new SongViewHolder(view);
     }
@@ -50,7 +54,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         return mSongs.size();
     }
 
-    public class SongViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(mSongs, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        mSongs.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public class SongViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
         ImageView mImvMusic;
         ImageView mImvMenu;
         TextView mTvTitle;
@@ -63,7 +80,23 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             mTvTitle = itemView.findViewById(R.id.tv_title);
             mTvArtist = itemView.findViewById(R.id.tv_artist);
             mImvMenu = itemView.findViewById(R.id.imv_menu);
-            view =itemView;
+            view = itemView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClickSong(mSongs, getAdapterPosition());
+                }
+            });
+        }
+
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
         }
     }
 

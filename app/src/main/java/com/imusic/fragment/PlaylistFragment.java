@@ -29,8 +29,6 @@ public class PlaylistFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt("page", 0);
-        mTitle = getArguments().getString("title");
     }
 
     @Override

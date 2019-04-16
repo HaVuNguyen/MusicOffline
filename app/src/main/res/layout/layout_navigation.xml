@@ -19,6 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
@@ -35,12 +36,16 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/tv_back"
             android:src="@drawable/ic_back"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             tools:ignore="MissingConstraints" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_back"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:textColor="#53A6CE"
             android:textSize="@dimen/text_size_17"
             android:textStyle="normal" />
