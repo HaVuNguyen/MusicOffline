@@ -3,7 +3,6 @@ package com.imusic.fragment.song;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,24 +11,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.imusic.R;
-import com.imusic.SongService;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.db.SRDatabase;
 import com.imusic.listeners.IOnClickSongListener;
+import com.imusic.listeners.OnStartDragListener;
+import com.imusic.listeners.SimpleItemTouchHelperCallback;
 import com.imusic.models.Song;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongFragment extends Fragment implements IOnClickSongListener {
+public class SongFragment extends Fragment implements IOnClickSongListener,OnStartDragListener {
 
     private int mPage;
     private String mTitle;
@@ -41,7 +41,7 @@ public class SongFragment extends Fragment implements IOnClickSongListener {
     private SongAdapter mSongAdapter;
     private ArrayList<Song> mSongs;
     private EditText mEdSearch;
-    private PLayerActivity mPLayerActivity;
+    private ItemTouchHelper mItemTouchHelper;
 
     public SongFragment() {
     }
@@ -80,7 +80,7 @@ public class SongFragment extends Fragment implements IOnClickSongListener {
     }
 
     private void setUpRecyclerView(View view) {
-        mSongAdapter = new SongAdapter(mSongs);
+        mSongAdapter = new SongAdapter(mSongs,this);
         mListMuisc = view.findViewById(R.id.list_music);
         mListMuisc.setLayoutManager(new LinearLayoutManager(getContext()));
         mListMuisc.setAdapter(mSongAdapter);
@@ -95,22 +95,22 @@ public class SongFragment extends Fragment implements IOnClickSongListener {
                 }
             }
         });
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mListMuisc);
     }
 
     public void getSongList() {
         mSongs = new ArrayList<>();
-        //query external audio
         ContentResolver musicResolver = getContext().getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
-        //iterate over results if valid
         if (musicCursor != null && musicCursor.moveToFirst()) {
-            //get columns
             int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int pathColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-            //add songs to list
             do {
                 int song = musicCursor.getInt(idColumn);
                 String mNameSong = musicCursor.getString(titleColumn);
@@ -121,25 +121,30 @@ public class SongFragment extends Fragment implements IOnClickSongListener {
         }
     }
 
-    private void searchSongs(){
-        SRDatabase database = SRDatabase.getDatabase(getContext().getApplicationContext());
-        List<Song> arrs = database.mSongDao().searchSong("%" + mEdSearch.getText().toString() + "%");
-        mSongs.clear();
-        for (Song item :arrs) {
-            mSongs.add(item);
-        }
-
-        mSongAdapter.notifyDataSetChanged();
-
-        if (mSongs.size() > 0){
-            mTvNoData.setVisibility(View.GONE);
-        }else {
-            mTvNoData.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
         getActivity().startActivity(PLayerActivity.getInstance(getActivity()));
     }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
+//
+//    private void searchSongs(){
+//        SRDatabase database = SRDatabase.getDatabase(getContext().getApplicationContext());
+//        List<Song> arrs = database.mSongDao().searchSong("%" + mEdSearch.getText().toString() + "%");
+//        mSongs.clear();
+//        for (Song item :arrs) {
+//            mSongs.add(item);
+//        }
+//
+//        mSongAdapter.notifyDataSetChanged();
+//
+//        if (mSongs.size() > 0){
+//            mTvNoData.setVisibility(View.GONE);
+//        }else {
+//            mTvNoData.setVisibility(View.VISIBLE);
+//        }
+//    }
 }
