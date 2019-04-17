@@ -11,4 +11,9 @@
     <string name="tv_play">Play</string>
     <string name="tv_playing">Playing Music</string>
     <string name="tv_next">Next</string>
+    <string name="tv_no_playlist">No Playlist</string>
+    <string name="tv_no_favorite">No Favorite</string>
+    <string name="tv_settings">Settings</string>
+    <string name="tv_instruction">Instruction</string>
+    <string name="tv_about">About</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.imusic.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,13 +17,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.imusic.R;
-import com.imusic.fragment.FavoriteFragment;
-import com.imusic.fragment.PlaylistFragment;
+import com.imusic.fragment.favorite.FavoriteFragment;
+import com.imusic.fragment.playlist.PlaylistFragment;
 import com.imusic.fragment.song.SongFragment;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ViewPager mViewPager;
@@ -77,9 +81,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         initView();
         initListener();
@@ -157,9 +165,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        if (id == R.id.nav_camera) {
-
+        switch (menuItem.getItemId()){
+            case R.id.setting:
+                Toast.makeText(this, "Setting in Coming", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.instruction:
+                Toast.makeText(this, "Instruction in Coming", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.about:
+                Toast.makeText(this, "About in Coming", Toast.LENGTH_SHORT).show();
+                break;
         }
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawer(GravityCompat.START);

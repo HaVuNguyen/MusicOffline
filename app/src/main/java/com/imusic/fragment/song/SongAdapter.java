@@ -50,7 +50,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public void onBindViewHolder(@NonNull final SongAdapter.SongViewHolder holder, int i) {
         Song song = mSongs.get(i);
-        holder.mImvMusic.setImageResource(R.drawable.ic_music_default);
+        holder.mImvMusic.setImageResource(R.drawable.ic_headphones);
         holder.mImvMenu.setImageResource(R.drawable.ic_drag_reorder);
         holder.mTvArtist.setText(song.getArtist());
         holder.mTvTitle.setText(song.getTitle());

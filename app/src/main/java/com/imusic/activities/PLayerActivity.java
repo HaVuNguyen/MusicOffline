@@ -1,5 +1,6 @@
 package com.imusic.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.imusic.R;
 
+import java.util.Objects;
+
 public class PLayerActivity extends AppCompatActivity implements View.OnClickListener {
     private View mViewBack;
     private ImageView mImvPlay, mImvNext, mImvPre;
@@ -25,9 +28,11 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
         return intent;
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_player);
         initComponents();
         initListeners();

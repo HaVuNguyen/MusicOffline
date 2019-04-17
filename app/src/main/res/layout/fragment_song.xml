@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFF">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/layout_top"
@@ -15,7 +13,7 @@
         android:id="@+id/view_top"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#7FC0E0"
+        android:background="#B679D7"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
@@ -41,10 +39,11 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:hint="@string/tv_search"
+            android:textColorHint="#000"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:singleLine="true"
-            android:textColor="#222222"
+            android:textColor="#000"
             tools:ignore="Autofill" />
     </LinearLayout>
 
@@ -53,11 +52,12 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/dp_5"
-        android:background="#7FC0E0"/>
+        android:background="#B679D7" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -66,16 +66,18 @@
                 android:id="@+id/list_music"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
                 tools:ignore="MissingConstraints" />
+
             <TextView
+                android:id="@+id/tv_no_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:id="@+id/tv_no_data"
-                android:textSize="@dimen/text_size_17"
                 android:text="@string/tv_no_songs"
-                android:visibility="gone"/>
+                android:textSize="@dimen/text_size_17"
+                android:visibility="gone" />
         </FrameLayout>
     </ScrollView>
 </LinearLayout>

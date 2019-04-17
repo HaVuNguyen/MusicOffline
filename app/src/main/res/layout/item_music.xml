@@ -10,22 +10,23 @@
         android:id="@+id/imv_my_music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_music"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_headphones"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:id="@+id/layout_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginLeft="@dimen/dp_10"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@id/imv_my_music"
         app:layout_constraintEnd_toStartOf="@id/view"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/imv_my_music"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
@@ -33,28 +34,25 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title"
-            android:textColor="@android:color/black"
             android:singleLine="true"
+            android:textColor="#000"
             android:textSize="@dimen/text_size_17" />
 
         <TextView
             android:id="@+id/tv_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="artist"
-            android:textColor="@android:color/black"
             android:singleLine="true"
+            android:textColor="#000"
             android:textSize="15sp" />
     </LinearLayout>
 
     <View
+        android:id="@+id/view"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:layout_constraintEnd_toStartOf="@id/imv_menu"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/view"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imv_menu"
@@ -62,7 +60,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_name"
         android:src="@drawable/ic_drag_reorder"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -31,8 +31,6 @@ import java.util.List;
 
 public class SongFragment extends Fragment implements IOnClickSongListener,OnStartDragListener {
 
-    private int mPage;
-    private String mTitle;
     private TextView mTvTitle;
     private TextView mTvNoData;
     private View mImvBack;
@@ -44,15 +42,6 @@ public class SongFragment extends Fragment implements IOnClickSongListener,OnSta
     private ItemTouchHelper mItemTouchHelper;
 
     public SongFragment() {
-    }
-
-    public static SongFragment newInstance(int page, String title) {
-        SongFragment songFragment = new SongFragment();
-        Bundle args = new Bundle();
-        args.putInt("page", page);
-        args.putString("title", title);
-        songFragment.setArguments(args);
-        return songFragment;
     }
 
     @Override
