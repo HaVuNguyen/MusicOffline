@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.db.SRDatabase;
+import com.imusic.fragment.BaseFragment;
 import com.imusic.listeners.IOnClickSongListener;
 import com.imusic.listeners.OnStartDragListener;
 import com.imusic.listeners.SimpleItemTouchHelperCallback;
@@ -29,11 +33,9 @@ import com.imusic.models.Song;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongFragment extends Fragment implements IOnClickSongListener,OnStartDragListener {
+public class SongFragment extends BaseFragment implements IOnClickSongListener,OnStartDragListener {
 
-    private TextView mTvTitle;
     private TextView mTvNoData;
-    private View mImvBack;
     private RecyclerView mListMuisc;
     private SongViewModel mSongViewModel;
     private SongAdapter mSongAdapter;
@@ -45,32 +47,19 @@ public class SongFragment extends Fragment implements IOnClickSongListener,OnSta
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int initLayout() {
+        return R.layout.fragment_song;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_song, container, false);
-        setView(view);
-        getSongList();
-        setUpRecyclerView(view);
-        return view;
-    }
+    protected void initComponents() {
 
-    private void setView(View view) {
-        mTvTitle = view.findViewById(R.id.tv_title);
-        mTvNoData = view.findViewById(R.id.tv_no_data);
-        mTvTitle.setText(R.string.tv_my_music);
-        mImvBack = view.findViewById(R.id.imv_back);
-        mImvBack.setVisibility(View.GONE);
-        mEdSearch = view.findViewById(R.id.ed_search);
-    }
 
-    private void setUpRecyclerView(View view) {
+        mSongs = new ArrayList<>();
+        mTvNoData = mView.findViewById(R.id.tv_no_data);
+        mEdSearch = mView.findViewById(R.id.ed_search);
         mSongAdapter = new SongAdapter(mSongs,this);
-        mListMuisc = view.findViewById(R.id.list_music);
+        mListMuisc = mView.findViewById(R.id.list_music);
         mListMuisc.setLayoutManager(new LinearLayoutManager(getContext()));
         mListMuisc.setAdapter(mSongAdapter);
         mSongAdapter.setOnClickListener(this);
@@ -88,12 +77,10 @@ public class SongFragment extends Fragment implements IOnClickSongListener,OnSta
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mListMuisc);
-    }
-
-    public void getSongList() {
-        mSongs = new ArrayList<>();
         ContentResolver musicResolver = getContext().getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        //get song list
         Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
         if (musicCursor != null && musicCursor.moveToFirst()) {
             int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
@@ -111,6 +98,11 @@ public class SongFragment extends Fragment implements IOnClickSongListener,OnSta
     }
 
     @Override
+    protected void addListener() {
+
+    }
+
+    @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
         getActivity().startActivity(PLayerActivity.getInstance(getActivity()));
     }
@@ -119,21 +111,4 @@ public class SongFragment extends Fragment implements IOnClickSongListener,OnSta
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
     }
-//
-//    private void searchSongs(){
-//        SRDatabase database = SRDatabase.getDatabase(getContext().getApplicationContext());
-//        List<Song> arrs = database.mSongDao().searchSong("%" + mEdSearch.getText().toString() + "%");
-//        mSongs.clear();
-//        for (Song item :arrs) {
-//            mSongs.add(item);
-//        }
-//
-//        mSongAdapter.notifyDataSetChanged();
-//
-//        if (mSongs.size() > 0){
-//            mTvNoData.setVisibility(View.GONE);
-//        }else {
-//            mTvNoData.setVisibility(View.VISIBLE);
-//        }
-//    }
 }

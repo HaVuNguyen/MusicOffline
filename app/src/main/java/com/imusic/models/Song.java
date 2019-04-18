@@ -25,12 +25,19 @@ public class Song implements Serializable {
     @ColumnInfo(name = "artist")
     private String artist = "";
 
+//    @ColumnInfo(name = "album_id")
+//    private int album_id = 0;
+//
+//    @ColumnInfo(name = "album_name")
+//    private String album_name = "";
+
     @Ignore
     public Song(int id, String title, String artist) {
         this.id = id;
         this.title = title;
         this.artist = artist;
     }
+
     @Ignore
     public Song(int id, String title) {
         this.id = id;

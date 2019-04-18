@@ -13,36 +13,57 @@
         android:layout_height="match_parent"
         android:background="#FFF">
 
-        <FrameLayout
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </FrameLayout>
-
-        <LinearLayout
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#822FB0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#822FB0"/>
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_bar">
+
+            <!--<android.support.v4.view.ViewPager-->
+                <!--android:id="@+id/view_pager"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        </FrameLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/view_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#822FB0"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:baselineAligned="false">
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:id="@+id/tab_my_music"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_10"
-                android:layout_marginEnd="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:orientation="vertical"
-                android:padding="@dimen/dp_7"
+                android:padding="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -59,26 +80,30 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:gravity="center"
                     android:text="@string/tv_my_music"
-                    android:textColor="@color/text_title_color_my_music"
-                    android:textSize="@dimen/text_size_15"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_title_color"
+                    android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_playlist"
-                android:layout_width="0dp"
+                android:id="@+id/tab_albums"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="@dimen/dp_7"
+                android:padding="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/tv_playlist"
-                    android:src="@drawable/ic_my_playlist" />
+                    android:contentDescription="@string/tv_albums"
+                    android:src="@drawable/ic_album" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,28 +111,32 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_5"
                     android:gravity="center"
-                    android:text="@string/tv_playlist"
-                    android:textColor="@color/text_title_color_playlist"
-                    android:textSize="@dimen/text_size_15"
+                    android:text="@string/tv_albums"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_title_color"
+                    android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tab_favorite"
+                android:id="@+id/tab_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
                 android:orientation="vertical"
-                android:padding="@dimen/dp_7"
+                android:padding="@dimen/dp_5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/tv_favorite"
-                    android:src="@drawable/ic_favorite" />
+                    android:contentDescription="@string/tv_artist"
+                    android:src="@drawable/ic_artist" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -115,15 +144,17 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dp_5"
                     android:gravity="center"
-                    android:text="@string/tv_favorite"
-                    android:textColor="@color/text_title_color_favorite"
-                    android:textSize="@dimen/text_size_15"
+                    android:text="@string/tv_artist"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_title_color"
+                    android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView
+        android:visibility="gone"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

@@ -5,13 +5,24 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/setting"
-            android:title="@string/tv_settings" />
+            android:id="@+id/home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/tv_home" />
         <item
-            android:id="@+id/instruction"
-            android:title="@string/tv_instruction" />
+            android:id="@+id/recently"
+            android:icon="@drawable/ic_recently"
+            android:title="@string/tv_recently_songs" />
+        <item
+            android:id="@+id/playlist"
+            android:icon="@drawable/ic_my_playlist_default"
+            android:title="@string/tv_playlist" />
+        <item
+            android:id="@+id/favorite"
+            android:icon="@drawable/ic_my_favorite_default"
+            android:title="@string/tv_favorite" />
         <item
             android:id="@+id/about"
+            android:icon="@drawable/ic_about"
             android:title="@string/tv_about" />
     </group>
 </menu>

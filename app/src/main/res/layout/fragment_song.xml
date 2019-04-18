@@ -5,17 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/layout_top"
-        layout="@layout/layout_navigation" />
-
-    <View
-        android:id="@+id/view_top"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#B679D7"
-        tools:ignore="MissingConstraints" />
-
     <LinearLayout
         android:id="@+id/layout_search"
         android:layout_width="match_parent"
@@ -39,7 +28,6 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:hint="@string/tv_search"
-            android:textColorHint="#000"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:singleLine="true"

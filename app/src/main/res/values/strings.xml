@@ -2,10 +2,10 @@
     <string name="app_name">IMusic</string>
     <string name="tv_back">Back</string>
     <string name="tv_search">Search</string>
-    <string name="tv_my_music">My Music</string>
+    <string name="tv_my_music">My music</string>
     <string name="tv_song">SONG</string>
-    <string name="tv_playlist">PLAYLIST</string>
-    <string name="tv_favorite">FAVORITE</string>
+    <string name="tv_playlist">Playlist</string>
+    <string name="tv_favorite">Favorite</string>
     <string name="tv_no_songs">No songs</string>
     <string name="tv_previous">Previous</string>
     <string name="tv_play">Play</string>
@@ -16,4 +16,11 @@
     <string name="tv_settings">Settings</string>
     <string name="tv_instruction">Instruction</string>
     <string name="tv_about">About</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="tv_recently_songs">Recently Songs</string>
+    <string name="tv_albums">Albums</string>
+    <string name="tv_artist">Artist</string>
+    <string name="tv_coming">Coming</string>
+    <string name="tv_home">Home</string>
 </resources>

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -17,8 +18,7 @@ import com.imusic.R;
 import java.util.Objects;
 
 public class PLayerActivity extends AppCompatActivity implements View.OnClickListener {
-    private View mViewBack;
-    private ImageView mImvPlay, mImvNext, mImvPre;
+    private ImageView mImvPlay, mImvNext, mImvPre,mImvBack,mImvMenu;
     private TextView mTvTitlePlaying, mTvCurrentDuration, mTvDuration, mTvTitle;
     private Handler mHandler;
     private SeekBar mSeekBar;
@@ -33,13 +33,16 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_player);
         initComponents();
         initListeners();
     }
 
     private void initComponents() {
-        mViewBack = findViewById(R.id.imv_back);
+        mImvBack = findViewById(R.id.imv_back);
+        mImvMenu = findViewById(R.id.imv_menu);
         mTvTitle = findViewById(R.id.tv_title);
         mImvPlay = findViewById(R.id.imv_play);
         mImvPre = findViewById(R.id.imv_pre);
@@ -56,7 +59,8 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
         mImvPlay.setOnClickListener(this);
         mImvNext.setOnClickListener(this);
         mImvPre.setOnClickListener(this);
-        mViewBack.setOnClickListener(this);
+        mImvBack.setOnClickListener(this);
+        mImvMenu.setVisibility(View.GONE);
         mSeekBar.setOnSeekBarChangeListener(mListener);
     }
 
