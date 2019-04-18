@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -17,8 +16,8 @@ import com.imusic.R;
 
 import java.util.Objects;
 
-public class PLayerActivity extends AppCompatActivity implements View.OnClickListener {
-    private ImageView mImvPlay, mImvNext, mImvPre,mImvBack,mImvMenu;
+public class PLayerActivity extends BaseActivity implements View.OnClickListener {
+    private ImageView mImvPlay, mImvNext, mImvPre,mImvMenu;
     private TextView mTvTitlePlaying, mTvCurrentDuration, mTvDuration, mTvTitle;
     private Handler mHandler;
     private SeekBar mSeekBar;
@@ -35,13 +34,15 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
         Objects.requireNonNull(getSupportActionBar()).hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_player);
-        initComponents();
-        initListeners();
     }
 
-    private void initComponents() {
-        mImvBack = findViewById(R.id.imv_back);
+    @Override
+    protected int initLayout() {
+        return R.layout.activity_player;
+    }
+
+    @Override
+    protected void initComponents() {
         mImvMenu = findViewById(R.id.imv_menu);
         mTvTitle = findViewById(R.id.tv_title);
         mImvPlay = findViewById(R.id.imv_play);
@@ -52,14 +53,22 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
         mTvDuration = findViewById(R.id.tv_duration);
         mSeekBar = findViewById(R.id.sb);
         mHandler = new Handler();
+        initNavigation();
     }
 
-    private void initListeners() {
+    @Override
+    protected void addListener() {
         mTvTitle.setText(R.string.tv_playing);
+        hiddenNavRight();
+        showNavLeft(R.drawable.ic_back, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mImvPlay.setOnClickListener(this);
         mImvNext.setOnClickListener(this);
         mImvPre.setOnClickListener(this);
-        mImvBack.setOnClickListener(this);
         mImvMenu.setVisibility(View.GONE);
         mSeekBar.setOnSeekBarChangeListener(mListener);
     }
@@ -67,9 +76,6 @@ public class PLayerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.imv_back:
-                finish();
-                break;
             case R.id.imv_play:
                 break;
             case R.id.imv_pre:

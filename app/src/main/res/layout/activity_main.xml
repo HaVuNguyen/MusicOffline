@@ -13,34 +13,16 @@
         android:layout_height="match_parent"
         android:background="#FFF">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#822FB0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tool_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#822FB0"/>
-        </android.support.design.widget.AppBarLayout>
+        <include
+            android:id="@+id/layout_navi"
+            layout="@layout/layout_navigation" />
 
         <FrameLayout
             android:id="@+id/frame_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar">
-
-            <!--<android.support.v4.view.ViewPager-->
-                <!--android:id="@+id/view_pager"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content" />-->
-        </FrameLayout>
+            app:layout_constraintTop_toBottomOf="@id/layout_navi" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/view_tab"
@@ -81,7 +63,7 @@
                     android:gravity="center"
                     android:text="@string/tv_my_music"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_title_color"
+                    android:textColor="@color/text_title_color_tab"
                     android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -113,7 +95,7 @@
                     android:gravity="center"
                     android:text="@string/tv_albums"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_title_color"
+                    android:textColor="@color/text_title_color_tab"
                     android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -146,21 +128,46 @@
                     android:gravity="center"
                     android:text="@string/tv_artist"
                     android:textAllCaps="true"
-                    android:textColor="@color/text_title_color"
+                    android:textColor="@color/text_title_color_tab"
                     android:textSize="@dimen/text_size_10"
                     android:textStyle="bold" />
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
-    <android.support.design.widget.NavigationView
-        android:visibility="gone"
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer"
-        tools:ignore="MissingConstraints" />
+    <LinearLayout
+        android:id="@+id/layout_left_menu"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_menu"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:src="@drawable/bg_player"
+                app:civ_border_color="#FFF"
+                app:civ_border_width="2dp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_menu"
+            android:layout_width="wrap_content"
+            android:background="#FFF"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
