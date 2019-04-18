@@ -131,7 +131,12 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
                         mFragment = new PlaylistFragment();
                         setNewPage(mFragment);
                         replaceFragment(mFragment);
-                        hiddenNavLeft();
+                        showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                toggleMenuRight();
+                            }
+                        });
                         mViewTab.setVisibility(View.GONE);
                         break;
                     case MENU_FAVORITE:

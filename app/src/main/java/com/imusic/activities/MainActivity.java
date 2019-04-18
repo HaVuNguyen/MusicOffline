@@ -56,14 +56,21 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void addListener() {
-        hiddenNavLeft();
-        showNavRight(R.drawable.ic_menu, new View.OnClickListener() {
+//        hiddenNavLeft();
+//        showNavRight(R.drawable.ic_menu, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                toggleMenuRight();
+//            }
+//        });
+
+        hiddenNavRight();
+        showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleMenuRight();
             }
         });
-
         mTabHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -50,8 +50,8 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
         app:layout_constraintEnd_toStartOf="@id/imv_menu"
         app:layout_constraintTop_toTopOf="parent" />
 

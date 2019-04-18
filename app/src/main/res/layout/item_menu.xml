@@ -22,7 +22,7 @@
             android:contentDescription="@string/tv_home"
             android:layout_gravity="center"
             android:background="@drawable/bg_item_menu"
-            android:padding="7dp"/>
+            android:padding="@dimen/dp_7"/>
 
         <TextView
             android:id="@+id/tv_name_menu"
@@ -39,5 +39,5 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"/>
+        android:layout_height="@dimen/dp_5"/>
 </LinearLayout>
