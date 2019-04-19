@@ -5,25 +5,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imusic.R;
+import com.imusic.SongService;
 import com.imusic.activities.PLayerActivity;
-import com.imusic.db.SRDatabase;
 import com.imusic.fragment.BaseFragment;
 import com.imusic.listeners.IOnClickSongListener;
 import com.imusic.listeners.OnStartDragListener;
@@ -33,7 +25,7 @@ import com.imusic.models.Song;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongFragment extends BaseFragment implements IOnClickSongListener,OnStartDragListener {
+public class SongFragment extends BaseFragment implements IOnClickSongListener, OnStartDragListener {
 
     private TextView mTvNoData;
     private RecyclerView mListMuisc;
@@ -58,7 +50,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener,O
         mSongs = new ArrayList<>();
         mTvNoData = mView.findViewById(R.id.tv_no_data);
         mEdSearch = mView.findViewById(R.id.ed_search);
-        mSongAdapter = new SongAdapter(mSongs,this);
+        mSongAdapter = new SongAdapter(mSongs, this);
         mListMuisc = mView.findViewById(R.id.list_music);
         mListMuisc.setLayoutManager(new LinearLayoutManager(getContext()));
         mListMuisc.setAdapter(mSongAdapter);
@@ -92,7 +84,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener,O
                 String mNameSong = musicCursor.getString(titleColumn);
                 String mSinger = musicCursor.getString(artistColumn);
                 String mPath = musicCursor.getString(pathColumn);
-                mSongs.add(new Song(song, mNameSong,mSinger));
+                mSongs.add(new Song(song, mNameSong, mSinger));
             } while (musicCursor.moveToNext());
         }
     }
@@ -105,6 +97,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener,O
     @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
         getActivity().startActivity(PLayerActivity.getInstance(getActivity()));
+//        getActivity().startService(SongService.getInstance(getContext().getApplicationContext()));
     }
 
     @Override

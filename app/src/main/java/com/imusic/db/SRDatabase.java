@@ -8,11 +8,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.imusic.models.Albums;
+import com.imusic.models.Artist;
 import com.imusic.models.Song;
 
-@Database(entities = {Song.class}, version = 1)
+@Database(entities = {Song.class, Albums.class, Artist.class}, version = 3)
 public abstract class SRDatabase extends RoomDatabase {
     public abstract SongDao mSongDao();
+
+    public abstract AlbumsDao mAlbumsDao();
+
+    public abstract ArtistDao mArtistDao();
 
     private static volatile SRDatabase INSTANCE;
 

@@ -8,32 +8,26 @@
     tools:context=".activities.MainActivity"
     tools:openDrawer="start">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFF">
+        android:background="#FFF"
+        android:orientation="vertical">
 
-        <include
-            android:id="@+id/layout_navi"
-            layout="@layout/layout_navigation" />
+        <include layout="@layout/layout_navigation" />
 
         <FrameLayout
             android:id="@+id/frame_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_navi" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/view_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#822FB0"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:id="@+id/tab_my_music"
@@ -133,7 +127,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_left_menu"
@@ -141,6 +135,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -153,8 +148,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageView"
-                android:layout_width="@dimen/dp_100"
-                android:layout_height="@dimen/dp_100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginBottom="@dimen/dp_10"
@@ -167,7 +162,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview_menu"
             android:layout_width="match_parent"
-            android:background="#FFF"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="#FFF" />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

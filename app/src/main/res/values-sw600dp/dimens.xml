@@ -13,7 +13,7 @@
     <dimen name="dp_125">125dp</dimen>
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_30">30dp</dimen>
-    <dimen name="dp_300">500dp</dimen>
+    <dimen name="dp_300">400dp</dimen>
     <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_2">2dp</dimen>
     <dimen name="dp_50">50dp</dimen>

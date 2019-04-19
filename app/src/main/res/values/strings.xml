@@ -23,4 +23,5 @@
     <string name="tv_artist">Artist</string>
     <string name="tv_coming">Coming</string>
     <string name="tv_home">Home</string>
+    <string name="tv_count_song">Song :</string>
 </resources>
