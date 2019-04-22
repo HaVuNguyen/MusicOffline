@@ -12,7 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.imusic.R;
+import com.imusic.activities.BaseActivity;
 import com.imusic.fragment.BaseFragment;
+import com.imusic.fragment.albums.detail.AlbumDetailFragment;
 import com.imusic.models.Albums;
 
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onItemClick(Albums albums, int position) {
                 Toast.makeText(mContext, albums.getName(), Toast.LENGTH_SHORT).show();
+                ((BaseActivity) mContext).addFragment(new AlbumDetailFragment());
             }
         });
 
@@ -77,4 +80,6 @@ public class AlbumsFragment extends BaseFragment {
     @Override
     protected void addListener() {
     }
+
+
 }

@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.imusic.R;
+import com.imusic.activities.BaseActivity;
 import com.imusic.fragment.BaseFragment;
+import com.imusic.fragment.artists.details.ArtistFragmentDetails;
 import com.imusic.models.Artist;
 
 import java.util.ArrayList;
@@ -53,9 +55,10 @@ public class ArtistFragment extends BaseFragment {
             @Override
             public void onItemClick(Artist artist, int position) {
                 Toast.makeText(mContext, artist.getArtist_name(), Toast.LENGTH_SHORT).show();
+                ((BaseActivity) mContext).addFragment(new ArtistFragmentDetails());
             }
         });
-        //get album
+        //get artist
 
         Cursor cursor = mContext.getContentResolver().query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {

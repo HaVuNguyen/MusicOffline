@@ -1,7 +1,6 @@
 package com.imusic.activities;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,13 +16,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.imusic.R;
-import com.imusic.fragment.PlaylistFragment;
+import com.imusic.fragment.favorite.FavoriteFragment;
+import com.imusic.fragment.playlist.PlaylistFragment;
+import com.imusic.fragment.recently.RecentlyFragment;
 import com.imusic.fragment.song.SongFragment;
 import com.imusic.menu.MenuAdapter;
 import com.imusic.menu.MenuModel;
@@ -124,23 +124,17 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
                         mViewTab.setVisibility(View.VISIBLE);
                         break;
                     case MENU_RECENTLY:
-                        Toast.makeText(BaseActivity.this, getResources().getString(R.string.tv_coming), Toast.LENGTH_LONG).show();
+                        setTitle(getString(R.string.tv_recently_songs));
+                        addFragment(new RecentlyFragment());
                         break;
                     case MENU_PLAYLIST:
                         setTitle(getString(R.string.tv_playlist));
                         mFragment = new PlaylistFragment();
-                        setNewPage(mFragment);
-                        replaceFragment(mFragment);
-                        showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                toggleMenuRight();
-                            }
-                        });
-                        mViewTab.setVisibility(View.GONE);
+                        addFragment(mFragment);
                         break;
                     case MENU_FAVORITE:
-                        Toast.makeText(BaseActivity.this, getResources().getString(R.string.tv_coming), Toast.LENGTH_LONG).show();
+                        setTitle(getString(R.string.tv_favorite));
+                        addFragment(new FavoriteFragment());
                         break;
                     case MENU_ABOUT:
                         Toast.makeText(BaseActivity.this, getResources().getString(R.string.tv_coming), Toast.LENGTH_LONG).show();
@@ -213,33 +207,11 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
         mImvNavLeft.setVisibility(View.GONE);
     }
 
-//    public void setPaddingNavRight(int padding) {
-//        mImvNavRight.setPadding(padding, padding, padding, padding);
-//    }
-
     public void setTitle(String title) {
         if (mTvTitle != null) {
             mTvTitle.setText(title);
         }
     }
-
-//    public void toast(String message) {
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-//    }
-//
-//    public void toast(int messageId) {
-//        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show();
-//    }
-//
-//    public void showLoading(boolean isShow) {
-//        if (isShow) {
-//            mProgressDialog.show();
-//        } else {
-//            if (mProgressDialog.isShowing()) {
-//                mProgressDialog.dismiss();
-//            }
-//        }
-//    }
 
     public void setNewPage(Fragment fragment) {
         try {
@@ -259,15 +231,15 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
             e.printStackTrace();
         }
     }
-//
-//    public void addFragment(Fragment fragment) {
-//        getSupportFragmentManager().beginTransaction()
-//                .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out,
-//                        R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
-//                .replace(R.id.frame_main, fragment)
-//                .addToBackStack(null)
-//                .commit();
-//    }
+
+    public void addFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.trans_right_to_left_in, R.anim.trans_right_to_left_out,
+                        R.anim.trans_left_to_right_in, R.anim.trans_left_to_right_out)
+                .replace(R.id.frame_main, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 
     public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().popBackStackImmediate(R.id.frame_main, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -295,30 +267,6 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
         super.startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-//
-//    public void hideKeyBoard() {
-//        try {
-//            runOnUiThread(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    try {
-//                        InputMethodManager inputManager = (InputMethodManager) BaseActivity.this
-//                                .getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        inputManager.hideSoftInputFromWindow(
-//                                BaseActivity.this.getCurrentFocus().getApplicationWindowToken(),
-//                                InputMethodManager.HIDE_NOT_ALWAYS);
-//                    } catch (IllegalStateException e) {
-//                    } catch (Exception e) {
-//                    }
-//                }
-//            });
-//
-//        } catch (IllegalStateException e) {
-//            // TODO: handle exception
-//        } catch (Exception e) {
-//        }
-//    }
 
     @Override
     public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -345,6 +293,23 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+//    public void toast(String message) {
+//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//    }
+//
+//    public void toast(int messageId) {
+//        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show();
+//    }
+//
+//    public void showLoading(boolean isShow) {
+//        if (isShow) {
+//            mProgressDialog.show();
+//        } else {
+//            if (mProgressDialog.isShowing()) {
+//                mProgressDialog.dismiss();
+//            }
+//        }
+//    }
 //    void complain(String message) {
 //        //alert("Error: " + message);
 //    }
@@ -354,5 +319,32 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
 //        bld.setMessage(message);
 //        bld.setNeutralButton("OK", null);
 //        bld.create().show();
+//    }
+//
+//    public void hideKeyBoard() {
+//        try {
+//            runOnUiThread(new Runnable() {
+//
+//                @Override
+//                public void run() {
+//                    try {
+//                        InputMethodManager inputManager = (InputMethodManager) BaseActivity.this
+//                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        inputManager.hideSoftInputFromWindow(
+//                                BaseActivity.this.getCurrentFocus().getApplicationWindowToken(),
+//                                InputMethodManager.HIDE_NOT_ALWAYS);
+//                    } catch (IllegalStateException e) {
+//                    } catch (Exception e) {
+//                    }
+//                }
+//            });
+//
+//        } catch (IllegalStateException e) {
+//            // TODO: handle exception
+//        } catch (Exception e) {
+//        }
+//    }
+//    public void setPaddingNavRight(int padding) {
+//        mImvNavRight.setPadding(padding, padding, padding, padding);
 //    }
 }

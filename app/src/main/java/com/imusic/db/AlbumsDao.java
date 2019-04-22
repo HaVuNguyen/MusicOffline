@@ -20,6 +20,9 @@ public abstract class AlbumsDao {
     @Query("SELECT * FROM album_table ORDER BY album_name")
     public abstract LiveData<List<Albums>> getAllAlbums();
 
-    @Query("SELECT COUNT(*) FROM album_table")
-    public abstract int getCount();
+//    @Query("SELECT COUNT(*) FROM album_table")
+//    public abstract int getCount();
+//
+//    @Query("SELECT * FROM album_table WHERE id=:albumId")
+//    public abstract void getAlbumId(int albumId);
 }

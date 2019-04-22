@@ -67,12 +67,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
         return mAlbums.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvTitleAlbum;
         private ImageView mImvAlbums;
         View view;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             mTvTitleAlbum = itemView.findViewById(R.id.tv_title_albums);
             mImvAlbums = itemView.findViewById(R.id.imv_albums);
@@ -80,7 +80,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mIOnClickSongListener.onItemClick(mAlbums.get(getAdapterPosition()), getAdapterPosition());
+                    mIOnClickSongListener.onItemClick(mAlbums.get(getLayoutPosition()), getLayoutPosition());
                 }
             });
         }

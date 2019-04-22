@@ -2,6 +2,7 @@ package com.imusic.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "album_table")
@@ -15,6 +16,10 @@ public class Albums {
 
     @ColumnInfo(name = "album_image")
     private String albumArt = null;
+
+    @Ignore
+    public Albums() {
+    }
 
     public Albums(int id, String name, String albumArt) {
         this.id = id;

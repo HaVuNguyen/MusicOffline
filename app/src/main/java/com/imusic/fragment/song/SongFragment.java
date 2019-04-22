@@ -45,8 +45,6 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
 
     @Override
     protected void initComponents() {
-
-
         mSongs = new ArrayList<>();
         mTvNoData = mView.findViewById(R.id.tv_no_data);
         mEdSearch = mView.findViewById(R.id.ed_search);

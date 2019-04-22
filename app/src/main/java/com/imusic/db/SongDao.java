@@ -22,4 +22,13 @@ public abstract class SongDao {
 
     @Query("SELECT * FROM song_table WHERE title LIKE :keyword")
     public abstract List<Song> searchSong(String keyword);
+
+    @Query("SELECT * FROM song_table WHERE album_id=:album_id")
+    public abstract List<Song> getSongByAlbumId(int album_id);
+
+    @Query("SELECT * FROM song_table WHERE album_id=:album_id ORDER BY title ASC")
+    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(int album_id);
+
+    @Query("SELECT * FROM song_table WHERE album_name=:album_name AND song_path=:pathTrack")
+    public abstract List<Song> getSongByNameAndAlbumName(String album_name, String pathTrack);
 }

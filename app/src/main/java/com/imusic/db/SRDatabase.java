@@ -4,15 +4,17 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.imusic.models.Albums;
 import com.imusic.models.Artist;
+import com.imusic.models.Playlist;
 import com.imusic.models.Song;
 
-@Database(entities = {Song.class, Albums.class, Artist.class}, version = 3)
+@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class}, version = 2,exportSchema = false)
 public abstract class SRDatabase extends RoomDatabase {
     public abstract SongDao mSongDao();
 
@@ -20,7 +22,17 @@ public abstract class SRDatabase extends RoomDatabase {
 
     public abstract ArtistDao mArtistDao();
 
+    public abstract PlaylistDao mPlaylistDao();
+
     private static volatile SRDatabase INSTANCE;
+
+    public static final Migration MIGRATION_1_2 = new Migration(1,2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE playlist_table" +
+                    " ADD COLUMN from_users INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
 
     public static SRDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -29,6 +41,7 @@ public abstract class SRDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             SRDatabase.class, "music_database")
                             .addCallback(sCallback)
+                            .addMigrations(MIGRATION_1_2)
                             .fallbackToDestructiveMigration()
                             .build();
                 }
