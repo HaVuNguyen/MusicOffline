@@ -1,4 +1,4 @@
-package com.imusic.fragment.child.my_music.albums.detail;
+package com.imusic.fragment.child.my_music.artists.details;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -9,19 +9,19 @@ import com.imusic.models.Song;
 
 import java.util.List;
 
-public class AlbumDetailRepository {
+public class ArtistDetailRepository {
 
     private SongDao mSongDao;
     private LiveData<List<Song>> mListLiveDataSong;
 
-    public AlbumDetailRepository(Application application) {
+    ArtistDetailRepository(Application application) {
         SRDatabase database = SRDatabase.getDatabase(application);
         mSongDao = database.mSongDao();
     }
 
-    public LiveData<List<Song>> getSong(int albumId) {
+    public LiveData<List<Song>> getListLiveDataArtistSong(int artist_id) {
         if (mListLiveDataSong == null) {
-            mListLiveDataSong = mSongDao.getSongByAlbumIdLiveData(albumId);
+            mListLiveDataSong = mSongDao.getSongByArtistIdLiveData(artist_id);
         }
         return mListLiveDataSong;
     }

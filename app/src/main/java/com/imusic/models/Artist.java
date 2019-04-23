@@ -2,6 +2,7 @@ package com.imusic.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "artist_table")
@@ -18,6 +19,10 @@ public class Artist {
 
     @ColumnInfo(name = "count_song")
     private String count_song = "";
+
+    @Ignore
+    public Artist() {
+    }
 
     public Artist(int id, String artist_name, String count_song) {
         this.id = id;

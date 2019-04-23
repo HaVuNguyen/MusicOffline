@@ -56,7 +56,7 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onItemClick(Albums albums, int position) {
                 Toast.makeText(mContext, albums.getName(), Toast.LENGTH_SHORT).show();
-//                ((BaseGroupFragment) getParentFragment()).addFragment(new AlbumDetailFragment());
+                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragment(new AlbumDetailFragment());
             }
         });
 

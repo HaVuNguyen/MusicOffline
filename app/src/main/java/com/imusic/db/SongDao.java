@@ -31,4 +31,7 @@ public abstract class SongDao {
 
     @Query("SELECT * FROM song_table WHERE album_name=:album_name AND song_path=:pathTrack")
     public abstract List<Song> getSongByNameAndAlbumName(String album_name, String pathTrack);
+
+    @Query("SELECT * FROM song_table WHERE artist_id=:artist_id ORDER BY title ASC")
+    public abstract LiveData<List<Song>> getSongByArtistIdLiveData(int artist_id);
 }

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imusic.R;
@@ -33,7 +34,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         final Playlist playlist = mPlaylists.get(i);
         holder.mTvNamePlaylist.setText(playlist.getTitle());
-        holder.mTvDelete.setOnClickListener(new View.OnClickListener() {
+        holder.mImvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mIOnClickListener.onDeleteItem(playlist);
@@ -48,11 +49,11 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvNamePlaylist;
-        private TextView mTvDelete;
+        private ImageView mImvDelete;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mTvDelete = itemView.findViewById(R.id.tv_delete);
+            mImvDelete = itemView.findViewById(R.id.btn_delete);
             mTvNamePlaylist = itemView.findViewById(R.id.tv_title_playlist);
 
             itemView.setOnClickListener(new View.OnClickListener() {

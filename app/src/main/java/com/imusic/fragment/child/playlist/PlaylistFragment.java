@@ -46,6 +46,9 @@ public class PlaylistFragment extends BaseFragment {
         });
         mRcPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
         mRcPlaylist.setAdapter(mAdapter);
+
+        Playlist playlist = new Playlist("Playlist");
+        mPlaylists.add(playlist);
         loadPlaylist();
         initNavigation();
     }
@@ -68,11 +71,11 @@ public class PlaylistFragment extends BaseFragment {
         showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((BaseGroupFragment)getParentFragment()).openMenu();
+                ((BaseGroupFragment) getParentFragment()).openMenu();
             }
         });
 
-       showNavRight(R.drawable.ic_add, new View.OnClickListener() {
+        showNavRight(R.drawable.ic_add, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddEditPlaylistDialog dialog = new AddEditPlaylistDialog(mContext, null, new AddEditPlaylistDialog.IOnSubmitListener() {

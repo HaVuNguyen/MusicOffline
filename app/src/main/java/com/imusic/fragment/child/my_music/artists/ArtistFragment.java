@@ -7,11 +7,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.imusic.R;
 import com.imusic.fragment.child.BaseFragment;
-import com.imusic.fragment.child.my_music.artists.details.ArtistFragmentDetails;
+import com.imusic.fragment.child.my_music.artists.details.ArtistDetailsFragment;
+import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Artist;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class ArtistFragment extends BaseFragment {
         mArtistAdapter.setIOnClickArtist(new ArtistAdapter.IOnClickArtist() {
             @Override
             public void onItemClick(Artist artist, int position) {
-                Toast.makeText(mContext, artist.getArtist_name(), Toast.LENGTH_SHORT).show();
+                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragment(new ArtistDetailsFragment());
             }
         });
         //get artist

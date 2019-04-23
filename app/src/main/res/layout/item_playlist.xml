@@ -22,19 +22,15 @@
             android:textSize="@dimen/text_size_17"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_delete"
+        <ImageView
+            android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
-            android:clickable="true"
-            android:text="X"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/text_size_17"
-            android:textStyle="bold"
-            android:focusable="true" />
+            android:src="@drawable/ic_delete"
+            android:contentDescription="@string/tv_delete" />
     </LinearLayout>
 
     <View

@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +23,7 @@ public class AlbumDetailFragment extends BaseFragment {
 
     private Albums mAlbums;
     private TextView mTvTitleAlbums;
-    private ImageView mImvAlbums;
+    private ImageView mImvAlbums,mImvBack;
     private RecyclerView mRcAlbumDetail;
 
     private AlbumDetailAdapter mAdapter;
@@ -38,12 +39,7 @@ public class AlbumDetailFragment extends BaseFragment {
         mAlbums = new Albums();
         mTvTitleAlbums = mView.findViewById(R.id.tv_name_album);
         mImvAlbums = mView.findViewById(R.id.imv_albums_art);
-
-        mTvTitleAlbums.setText(mAlbums.getName());
-        Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.drawable.bg_album_default))
-                .load(mAlbums.getAlbumArt())
-                .into(mImvAlbums);
+        mImvBack = mView.findViewById(R.id.btn_back_album);
 
         mAdapter = new AlbumDetailAdapter(new ArrayList<Song>(), new AlbumDetailAdapter.IOnItemClickListener() {
             @Override
@@ -66,6 +62,17 @@ public class AlbumDetailFragment extends BaseFragment {
 
     @Override
     protected void addListener() {
+        mImvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackToPreFragment();
+            }
+        });
 
+        mTvTitleAlbums.setText(mAlbums.getName());
+        Glide.with(mContext)
+                .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.drawable.bg_album_default))
+                .load(mAlbums.getAlbumArt())
+                .into(mImvAlbums);
     }
 }
