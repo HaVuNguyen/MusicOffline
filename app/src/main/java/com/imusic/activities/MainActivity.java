@@ -5,20 +5,143 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.imusic.R;
-import com.imusic.fragment.albums.AlbumsFragment;
-import com.imusic.fragment.artists.ArtistFragment;
-import com.imusic.fragment.song.SongFragment;
+import com.imusic.fragment.group.GroupFavoriteFragment;
+import com.imusic.fragment.group.GroupMyMusicFragment;
+import com.imusic.fragment.group.GroupPlaylistFragment;
+import com.imusic.fragment.group.GroupRecentlyFragment;
+import com.imusic.menu.MenuAdapter;
+import com.imusic.menu.MenuModel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
-    private View mTabHome, mTabAlbum, mTabArtist, mCurrentTab;
-    private Fragment mCurrentFragment = new Fragment();
+    private RecyclerView mRcMenu;
+    private MenuAdapter mMenuAdapter;
+    private List<MenuModel> mMenuLists = new ArrayList<>();
+
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        private GroupMyMusicFragment mGroupMyMusicFragment;
+        private GroupRecentlyFragment mGroupRecentlyFragment;
+        private GroupPlaylistFragment mGroupPlaylistFragment;
+        private GroupFavoriteFragment mGroupFavoriteFragment;
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+            mGroupMyMusicFragment = new GroupMyMusicFragment();
+            mGroupPlaylistFragment = new GroupPlaylistFragment();
+            mGroupFavoriteFragment = new GroupFavoriteFragment();
+            mGroupRecentlyFragment = new GroupRecentlyFragment();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0) {
+                return mGroupMyMusicFragment;
+            }
+            if (position == 1) {
+                return mGroupRecentlyFragment;
+            }
+            if (position == 2) {
+                return mGroupPlaylistFragment;
+            }
+            return mGroupFavoriteFragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+        public CharSequence getPageTitle(int position) {
+            Locale locale = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return MainActivity.this.getString(R.string.tv_my_music);
+                case 1:
+                    return MainActivity.this.getString(R.string.tv_recently_songs);
+                case 2:
+                    return MainActivity.this.getString(R.string.tv_playlist);
+                case 3:
+                    return MainActivity.this.getString(R.string.tv_favorite);
+                default:
+                    return null;
+            }
+        }
+    }
+
+    private void loadMenu() {
+        mRcMenu = findViewById(R.id.recyclerview_menu);
+        mRcMenu.setLayoutManager(new LinearLayoutManager(this));
+        mMenuLists.clear();
+        mMenuLists.add(new MenuModel(R.drawable.ic_music, getString(R.string.tv_my_music), MenuModel.MENU_TYPE.MENU_MY_MUSIC));
+        mMenuLists.add(new MenuModel(R.drawable.ic_recently, getString(R.string.tv_recently_songs), MenuModel.MENU_TYPE.MENU_RECENTLY));
+        mMenuLists.add(new MenuModel(R.drawable.ic_my_playlist, getString(R.string.tv_playlist), MenuModel.MENU_TYPE.MENU_PLAYLIST));
+        mMenuLists.add(new MenuModel(R.drawable.ic_my_favorite, getString(R.string.tv_favorite), MenuModel.MENU_TYPE.MENU_FAVORITE));
+
+        mMenuAdapter = new MenuAdapter(this, mMenuLists);
+        mRcMenu.setAdapter(mMenuAdapter);
+        mMenuAdapter.setIOnClickItemListener(new MenuAdapter.IOnClickItemListener() {
+            @Override
+            public void onItemClick(MenuModel.MENU_TYPE menuType) {
+                switch (menuType) {
+                    case MENU_MY_MUSIC:
+                        replaceFragment(new GroupMyMusicFragment());
+                        break;
+                    case MENU_RECENTLY:
+                        replaceFragment(new GroupRecentlyFragment());
+                        break;
+                    case MENU_PLAYLIST:
+                        replaceFragment(new GroupPlaylistFragment());
+                        break;
+                    case MENU_FAVORITE:
+                        replaceFragment(new GroupFavoriteFragment());
+                        break;
+                }
+                if (mDrawerLayout != null) {
+                    mDrawerLayout.closeDrawer(mLayoutSlideMenu);
+                }
+            }
+        });
+    }
+
+    public void openMenu() {
+        if (mDrawerLayout != null) {
+            if (mDrawerLayout.isDrawerOpen(mLayoutSlideMenu)) {
+                mDrawerLayout.closeDrawer(mLayoutSlideMenu);
+            } else {
+                mDrawerLayout.openDrawer(mLayoutSlideMenu);
+            }
+        }
+    }
+
+    public void showNavLeft(int resId, View.OnClickListener listener) {
+        showNavigation(mImvNavLeft, resId, listener);
+    }
+
+    public void showNavRight(int resId, View.OnClickListener listener) {
+        showNavigation(mImvNavRight, resId, listener);
+    }
+
+    public void hiddenNavRight() {
+        mImvNavRight.setVisibility(View.GONE);
+    }
+
+    public void hiddenNavLeft() {
+        mImvNavLeft.setVisibility(View.GONE);
+    }
 
     @SuppressLint("NewApi")
     @Override
@@ -36,83 +159,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initComponents() {
-        mTabHome = findViewById(R.id.tab_my_music);
-        mTabAlbum = findViewById(R.id.tab_albums);
-        mTabArtist = findViewById(R.id.tab_artist);
+        this.mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        loadMenu();
 
-        setTitle(getString(R.string.tv_my_music));
-        mCurrentTab = mTabHome;
-        mCurrentTab.setSelected(true);
-
-        mCurrentFragment = new SongFragment();
-        setNewPage(mCurrentFragment);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_main, mCurrentFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-        initRightMenu();
+        replaceFragment(new GroupMyMusicFragment());
     }
 
     @Override
     protected void addListener() {
-//        hiddenNavLeft();
-//        showNavRight(R.drawable.ic_menu, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                toggleMenuRight();
-//            }
-//        });
 
-        hiddenNavRight();
-        showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleMenuRight();
-            }
-        });
-        mTabHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTitle(getString(R.string.tv_my_music));
-                if (mCurrentTab != null) {
-                    mCurrentTab.setSelected(false);
-                }
-                mCurrentTab = mTabHome;
-                mCurrentTab.setSelected(true);
-                mCurrentFragment = new SongFragment();
-                setNewPage(mCurrentFragment);
-                replaceFragment(mCurrentFragment);
-            }
-        });
-        mTabAlbum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTitle(getString(R.string.tv_albums));
-                if (mCurrentTab != null) {
-                    mCurrentTab.setSelected(false);
-                }
-                mCurrentTab = mTabAlbum;
-                mCurrentTab.setSelected(true);
-                mCurrentFragment = new AlbumsFragment();
-                setNewPage(mCurrentFragment);
-                replaceFragment(mCurrentFragment);
-            }
-        });
-        mTabArtist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTitle(getString(R.string.tv_artist));
-                if (mCurrentTab != null) {
-                    mCurrentTab.setSelected(false);
-                }
-                mCurrentTab = mTabArtist;
-                mCurrentTab.setSelected(true);
-                mCurrentFragment = new ArtistFragment();
-                setNewPage(mCurrentFragment);
-                replaceFragment(mCurrentFragment);
-            }
-        });
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

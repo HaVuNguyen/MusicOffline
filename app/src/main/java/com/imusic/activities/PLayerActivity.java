@@ -69,7 +69,6 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
         mImvPlay.setOnClickListener(this);
         mImvNext.setOnClickListener(this);
         mImvPre.setOnClickListener(this);
-        mImvMenu.setVisibility(View.GONE);
         mSeekBar.setOnSeekBarChangeListener(mListener);
     }
 

@@ -1,7 +1,7 @@
 package com.imusic.menu;
 
 public class MenuModel {
-    public enum MENU_TYPE {MENU_PLAYLIST, MENU_FAVORITE, MENU_RECENTLY, MENU_ABOUT,MENU_HOME}
+    public enum MENU_TYPE {MENU_PLAYLIST, MENU_FAVORITE, MENU_RECENTLY, MENU_MY_MUSIC}
 
     private String mNameMenu;
     private int mImageMenu;

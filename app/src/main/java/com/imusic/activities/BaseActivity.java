@@ -18,13 +18,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.imusic.R;
-import com.imusic.fragment.favorite.FavoriteFragment;
-import com.imusic.fragment.playlist.PlaylistFragment;
-import com.imusic.fragment.recently.RecentlyFragment;
-import com.imusic.fragment.song.SongFragment;
+import com.imusic.fragment.group.GroupFavoriteFragment;
+import com.imusic.fragment.group.GroupMyMusicFragment;
+import com.imusic.fragment.group.GroupPlaylistFragment;
+import com.imusic.fragment.group.GroupRecentlyFragment;
 import com.imusic.menu.MenuAdapter;
 import com.imusic.menu.MenuModel;
 
@@ -34,13 +33,13 @@ import java.util.List;
 public abstract class BaseActivity extends AppCompatActivity implements DrawerLayout.DrawerListener {
     private boolean isOnPause = false;
     public ImageView mImvNavRight;
-    private ImageView mImvNavLeft;
+    public ImageView mImvNavLeft;
     private TextView mTvTitle;
     protected Fragment mFragment;
     protected ProgressDialog mProgressDialog;
     protected DrawerLayout mDrawerLayout;
     private ImageView mImvMenu, mImvBack;
-    private View mLayoutSlideMenu;
+    protected View mLayoutSlideMenu;
     private RecyclerView mRcMenu;
     private MenuAdapter mMenuAdapter;
     private List<MenuModel> mMenuLists = new ArrayList<>();
@@ -101,43 +100,30 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
         mRcMenu = findViewById(R.id.recyclerview_menu);
         mRcMenu.setLayoutManager(new LinearLayoutManager(this));
         mMenuLists.clear();
-        mMenuLists.add(new MenuModel(R.drawable.ic_home, getString(R.string.tv_home), MenuModel.MENU_TYPE.MENU_HOME));
+        mMenuLists.add(new MenuModel(R.drawable.ic_music, getString(R.string.tv_my_music), MenuModel.MENU_TYPE.MENU_MY_MUSIC));
         mMenuLists.add(new MenuModel(R.drawable.ic_recently, getString(R.string.tv_recently_songs), MenuModel.MENU_TYPE.MENU_RECENTLY));
         mMenuLists.add(new MenuModel(R.drawable.ic_my_playlist, getString(R.string.tv_playlist), MenuModel.MENU_TYPE.MENU_PLAYLIST));
         mMenuLists.add(new MenuModel(R.drawable.ic_my_favorite, getString(R.string.tv_favorite), MenuModel.MENU_TYPE.MENU_FAVORITE));
-        mMenuLists.add(new MenuModel(R.drawable.ic_about, getString(R.string.tv_about), MenuModel.MENU_TYPE.MENU_ABOUT));
 
         mMenuAdapter = new MenuAdapter(this, mMenuLists);
         mRcMenu.setAdapter(mMenuAdapter);
         mMenuAdapter.setIOnClickItemListener(new MenuAdapter.IOnClickItemListener() {
             @Override
             public void onItemClick(MenuModel.MENU_TYPE menuType) {
-                Intent i = new Intent();
                 switch (menuType) {
-                    case MENU_HOME:
-                        mFragment = new SongFragment();
-                        setNewPage(mFragment);
-                        setTitle(getString(R.string.tv_my_music));
-                        mCurrentTab = mTabHome;
-                        mCurrentTab.setSelected(true);
-                        replaceFragment(mFragment);
-                        mViewTab.setVisibility(View.VISIBLE);
+                    case MENU_MY_MUSIC:
+                        replaceFragment(new GroupMyMusicFragment());
                         break;
                     case MENU_RECENTLY:
-                        setTitle(getString(R.string.tv_recently_songs));
-                        addFragment(new RecentlyFragment());
+                        replaceFragment(new GroupRecentlyFragment());
                         break;
                     case MENU_PLAYLIST:
                         setTitle(getString(R.string.tv_playlist));
-                        mFragment = new PlaylistFragment();
-                        addFragment(mFragment);
+                        addFragment(new GroupPlaylistFragment());
                         break;
                     case MENU_FAVORITE:
                         setTitle(getString(R.string.tv_favorite));
-                        addFragment(new FavoriteFragment());
-                        break;
-                    case MENU_ABOUT:
-                        Toast.makeText(BaseActivity.this, getResources().getString(R.string.tv_coming), Toast.LENGTH_LONG).show();
+                        addFragment(new GroupFavoriteFragment());
                         break;
                 }
                 if (mDrawerLayout != null) {
@@ -168,15 +154,15 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
 
     @SuppressLint("CutPasteId")
     public void initNavigation() {
-        mImvBack = findViewById(R.id.imv_back);
-        mImvMenu = findViewById(R.id.imv_menu);
+        mImvBack = findViewById(R.id.imv_left);
+        mImvMenu = findViewById(R.id.imv_right);
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mLayoutSlideMenu = findViewById(R.id.layout_left_menu);
 
         mTvTitle = findViewById(R.id.tv_title);
         if (mTvTitle != null) {
-            mImvNavLeft = findViewById(R.id.imv_back);
-            mImvNavRight = findViewById(R.id.imv_menu);
+            mImvNavLeft = findViewById(R.id.imv_left);
+            mImvNavRight = findViewById(R.id.imv_right);
             mTvTitle.setSelected(true);
         }
     }

@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/layout_navigation"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/tv_favorite" />
-
 </LinearLayout>
