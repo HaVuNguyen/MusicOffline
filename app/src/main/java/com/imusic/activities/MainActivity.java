@@ -1,12 +1,17 @@
 package com.imusic.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +34,7 @@ public class MainActivity extends BaseActivity {
     private RecyclerView mRcMenu;
     private MenuAdapter mMenuAdapter;
     private List<MenuModel> mMenuLists = new ArrayList<>();
+    private static final int REQUEST_PERMISSIONS = 100;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -98,15 +104,19 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(MenuModel.MENU_TYPE menuType) {
                 switch (menuType) {
                     case MENU_MY_MUSIC:
+                        setTitle(getString(R.string.tv_my_music));
                         replaceFragment(new GroupMyMusicFragment());
                         break;
                     case MENU_RECENTLY:
+                        setTitle(getString(R.string.tv_recently_songs));
                         replaceFragment(new GroupRecentlyFragment());
                         break;
                     case MENU_PLAYLIST:
+                        setTitle(getString(R.string.tv_playlist));
                         replaceFragment(new GroupPlaylistFragment());
                         break;
                     case MENU_FAVORITE:
+                        setTitle(getString(R.string.tv_favorite));
                         replaceFragment(new GroupFavoriteFragment());
                         break;
                 }
@@ -159,10 +169,29 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initComponents() {
+        checkPermission();
         this.mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         loadMenu();
-
         replaceFragment(new GroupMyMusicFragment());
+    }
+
+    public void checkPermission() {
+        if (Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, REQUEST_PERMISSIONS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+            checkPermission();
+        }
     }
 
     @Override

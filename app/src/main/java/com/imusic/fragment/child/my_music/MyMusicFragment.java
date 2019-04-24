@@ -3,14 +3,13 @@ package com.imusic.fragment.child.my_music;
 
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Toast;
 
 import com.imusic.R;
 import com.imusic.fragment.child.BaseFragment;
-import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.fragment.child.my_music.albums.AlbumsFragment;
 import com.imusic.fragment.child.my_music.artists.ArtistFragment;
 import com.imusic.fragment.child.my_music.song.SongFragment;
+import com.imusic.fragment.group.BaseGroupFragment;
 
 public class MyMusicFragment extends BaseFragment {
     private View mTabHome, mTabAlbum, mTabArtist, mCurrentTab;
@@ -27,7 +26,7 @@ public class MyMusicFragment extends BaseFragment {
         mTabAlbum = mView.findViewById(R.id.tab_albums);
         mTabArtist = mView.findViewById(R.id.tab_artist);
 
-        setTitle(getString(R.string.tv_my_music));
+        setTitle(getString(R.string.tv_song));
         mCurrentTab = mTabHome;
         mCurrentTab.setSelected(true);
 
@@ -38,6 +37,7 @@ public class MyMusicFragment extends BaseFragment {
 
     @Override
     protected void addListener() {
+        setTitle(getString(R.string.tv_my_music));
         hiddenNavRight();
         showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
             @Override
@@ -50,7 +50,7 @@ public class MyMusicFragment extends BaseFragment {
         mTabHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTitle(getString(R.string.tv_my_music));
+                setTitle(getString(R.string.tv_song));
                 if (mCurrentTab != null) {
                     mCurrentTab.setSelected(false);
                 }
