@@ -9,7 +9,7 @@ import com.imusic.models.Song;
 
 import java.util.List;
 
-public class ArtistDetailRepository {
+class ArtistDetailRepository {
 
     private SongDao mSongDao;
     private LiveData<List<Song>> mListLiveDataSong;
@@ -19,10 +19,8 @@ public class ArtistDetailRepository {
         mSongDao = database.mSongDao();
     }
 
-    public LiveData<List<Song>> getListLiveDataArtistSong(int artist_id) {
-        if (mListLiveDataSong == null) {
-            mListLiveDataSong = mSongDao.getSongByArtistIdLiveData(artist_id);
-        }
+    LiveData<List<Song>> getListLiveDataArtistSong(int artist_id) {
+        mListLiveDataSong = mSongDao.getSongByArtistIdLiveData(artist_id);
         return mListLiveDataSong;
     }
 }

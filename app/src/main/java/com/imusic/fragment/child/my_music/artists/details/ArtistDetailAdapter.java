@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapter.ViewHolder> {
 
-    private ArrayList<Song> mSongs;
+    protected ArrayList<Song> mSongs;
     private IOnItemClickListener mListener;
 
     ArtistDetailAdapter(ArrayList<Song> songs, IOnItemClickListener clickListener) {

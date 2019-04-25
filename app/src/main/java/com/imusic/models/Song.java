@@ -14,7 +14,7 @@ public class Song implements Serializable {
     private int id = 0;
 
     @ColumnInfo(name = "title")
-    private String title = "";
+    private String title;
 
     @ColumnInfo(name = "duration")
     private int duration = 0;
@@ -23,19 +23,20 @@ public class Song implements Serializable {
     private String song_path = null;
 
     @ColumnInfo(name = "artist")
-    private String artist = "";
+    private String artist;
 
     @ColumnInfo(name = "album_id")
     private int album_id = 0;
 
     @ColumnInfo(name = "album_name")
-    private String album_name = "";
+    private String album_name;
 
     @ColumnInfo(name = "artist_id")
     private int artist_id = 0;
 
     @ColumnInfo(name = "artist_name")
-    private String artist_name = "";
+    private String artist_name;
+
 
     @Ignore
     public Song(int id, String title, String artist) {
@@ -53,6 +54,18 @@ public class Song implements Serializable {
     @Ignore
     public Song(String title) {
         this.title = title;
+    }
+
+    public Song(int id, String title, int album_id) {
+        this.id = id;
+        this.title = title;
+        this.album_id = album_id;
+    }
+
+    public Song(String title, String artist_name, int artist_id) {
+        this.title = title;
+        this.artist_name = artist_name;
+        this.artist_id = artist_id;
     }
 
     public Song() {

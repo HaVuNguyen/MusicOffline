@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_50"
     android:background="#822FB0"
-    android:padding="@dimen/dp_10">
+    android:padding="@dimen/dp_2">
 
     <ImageView
         android:id="@+id/imv_left"

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
 
-    private ArrayList<Albums> mAlbums;
+    protected ArrayList<Albums> mAlbums;
     private View.OnClickListener mListener;
     private IOnItemClickListener mIOnClickSongListener;
 

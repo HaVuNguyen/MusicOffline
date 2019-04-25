@@ -18,7 +18,7 @@ public class AlbumDetailViewModel extends AndroidViewModel {
         mAlbumDetailRepository = new AlbumDetailRepository(application);
     }
 
-    LiveData<List<Song>> getListLiveDataSong(int albumId) {
+    LiveData<List<Song>> getSongs(int albumId) {
         return mAlbumDetailRepository.getSong(albumId);
     }
 }

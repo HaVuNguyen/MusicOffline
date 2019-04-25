@@ -53,7 +53,7 @@ public class ArtistFragment extends BaseFragment {
         mArtistAdapter.setIOnClickArtist(new ArtistAdapter.IOnClickArtist() {
             @Override
             public void onItemClick(Artist artist, int position) {
-                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragment(new ArtistDetailsFragment());
+                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragmentNotReloadContent(ArtistDetailsFragment.getInstance(artist));
             }
         });
         //get artist

@@ -12,17 +12,17 @@ import java.util.List;
 public class AlbumDetailRepository {
 
     private SongDao mSongDao;
-    private LiveData<List<Song>> mListLiveDataSong;
+    private LiveData<List<Song>> mSongs;
 
-    public AlbumDetailRepository(Application application) {
+    AlbumDetailRepository(Application application) {
         SRDatabase database = SRDatabase.getDatabase(application);
         mSongDao = database.mSongDao();
     }
 
-    public LiveData<List<Song>> getSong(int albumId) {
-        if (mListLiveDataSong == null) {
-            mListLiveDataSong = mSongDao.getSongByAlbumIdLiveData(albumId);
+    LiveData<List<Song>> getSong(int albumId) {
+        if (mSongs == null) {
+            mSongs = mSongDao.getSongByAlbumIdLiveData(albumId);
         }
-        return mListLiveDataSong;
+        return mSongs;
     }
 }

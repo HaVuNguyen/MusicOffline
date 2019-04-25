@@ -2,9 +2,7 @@ package com.imusic.fragment.child.my_music.albums;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.ContentResolver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,8 +11,8 @@ import android.widget.Toast;
 
 import com.imusic.R;
 import com.imusic.fragment.child.BaseFragment;
-import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.fragment.child.my_music.albums.detail.AlbumDetailFragment;
+import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Albums;
 
 import java.util.ArrayList;
@@ -47,8 +45,9 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onChanged(@Nullable List<Albums> albums) {
                 if (albums != null) {
+//                    mAlbums = (ArrayList<Albums>) albums;
+//                    mAlbumAdapter.mAlbums = mAlbums;
                     mAlbums = new ArrayList<>(albums);
-                    mAlbumAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -56,14 +55,12 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onItemClick(Albums albums, int position) {
                 Toast.makeText(mContext, albums.getName(), Toast.LENGTH_SHORT).show();
-                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragment(new AlbumDetailFragment());
+                ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragmentNotReloadContent(AlbumDetailFragment.getInstance(albums));
             }
         });
 
         //get album
-        ContentResolver contentResolver = mContext.getContentResolver();
-        Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
+        Cursor cursor = mContext.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             int titleColumn = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM);
             int idColumn = cursor.getColumnIndex(MediaStore.Audio.Albums._ID);
@@ -80,5 +77,4 @@ public class AlbumsFragment extends BaseFragment {
     @Override
     protected void addListener() {
     }
-
 }

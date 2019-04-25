@@ -15,33 +15,25 @@ import java.util.ArrayList;
 
 public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.ViewHolder> {
 
-    private ArrayList<Song> mSongs;
+    ArrayList<Song> mSongs;
     private IOnItemClickListener mListener;
-    private View.OnClickListener mOnClickListener;
 
-    public AlbumDetailAdapter(ArrayList<Song> songs, IOnItemClickListener iOnItemClickListener) {
-        this.mSongs = songs;
+    AlbumDetailAdapter(ArrayList<Song> data, IOnItemClickListener iOnItemClickListener) {
+        this.mSongs = data;
         this.mListener = iOnItemClickListener;
-    }
-
-    public void setOnClickListener(IOnItemClickListener onClickListener) {
-        this.mListener = onClickListener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_album_detail, viewGroup, false);
-        view.setOnClickListener(mOnClickListener);
-        return new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-        Song song = mSongs.get(i);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Song song = mSongs.get(position);
         holder.mTvNameAlbumDetail.setText(song.getTitle());
         holder.mImvAlbumDetail.setImageResource(R.drawable.bg_album_default);
-        holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -60,7 +52,8 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onItemClick(mSongs.get(getLayoutPosition()));
+                    Song song = mSongs.get(getLayoutPosition());
+                    mListener.onItemClick(song);
                 }
             });
         }
