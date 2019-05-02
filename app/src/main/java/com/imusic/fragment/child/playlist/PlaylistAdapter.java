@@ -71,4 +71,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
 
         void onDeleteItem(Playlist playlist);
     }
+
+    void setPlaylists(ArrayList<Playlist> playlists) {
+        mPlaylists = playlists;
+        notifyDataSetChanged();
+    }
 }

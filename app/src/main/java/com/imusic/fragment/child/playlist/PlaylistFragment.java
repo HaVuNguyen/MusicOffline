@@ -32,6 +32,7 @@ public class PlaylistFragment extends BaseFragment {
     @Override
     protected void initComponents() {
         mPlaylists = new ArrayList<>();
+        mViewModel = ViewModelProviders.of(this).get(PlaylistViewModel.class);
         mRcPlaylist = mView.findViewById(R.id.rc_list_playlist);
         mAdapter = new PlaylistAdapter(mPlaylists, new PlaylistAdapter.IOnClickListener() {
             @Override
@@ -46,24 +47,16 @@ public class PlaylistFragment extends BaseFragment {
         });
         mRcPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
         mRcPlaylist.setAdapter(mAdapter);
-
-        Playlist playlist = new Playlist("Playlist");
-        mPlaylists.add(playlist);
-        loadPlaylist();
-        initNavigation();
-    }
-
-    private void loadPlaylist() {
-        mViewModel = ViewModelProviders.of(this).get(PlaylistViewModel.class);
-        mViewModel.getAllPlaylist().observe(this, new Observer<List<Playlist>>() {
+        mViewModel.getAllPlaylist().observe(PlaylistFragment.this, new Observer<List<Playlist>>() {
             @Override
             public void onChanged(@Nullable List<Playlist> playlists) {
                 if (playlists != null) {
                     mPlaylists = new ArrayList<>(playlists);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.setPlaylists(mPlaylists);
                 }
             }
         });
+        initNavigation();
     }
 
     @Override
@@ -81,7 +74,7 @@ public class PlaylistFragment extends BaseFragment {
                 AddEditPlaylistDialog dialog = new AddEditPlaylistDialog(mContext, null, new AddEditPlaylistDialog.IOnSubmitListener() {
                     @Override
                     public void submit(String name) {
-                        Toast.makeText(mContext, "Create playlist successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.tv_create_playlist_success), Toast.LENGTH_SHORT).show();
                         Playlist playlist = new Playlist(name);
                         playlist.setFromUsers(1);
                         mViewModel.insert(playlist);
