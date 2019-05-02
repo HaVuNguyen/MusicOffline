@@ -34,11 +34,11 @@ public abstract class SongDao {
     public abstract List<Song> getSongByAlbumId(int album_id);
 
     @Query("SELECT * FROM song_table WHERE album_id=:album_id ORDER BY title ASC")
-    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(int album_id);
+    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(long album_id);
 
     @Query("SELECT * FROM song_table WHERE album_name=:album_name AND song_path=:pathTrack")
     public abstract List<Song> getSongByNameAndAlbumName(String album_name, String pathTrack);
 
     @Query("SELECT * FROM song_table WHERE artist_id=:artist_id ORDER BY title ASC")
-    public abstract LiveData<List<Song>> getSongByArtistIdLiveData(int artist_id);
+    public abstract LiveData<List<Song>> getSongByArtistIdLiveData(long artist_id);
 }

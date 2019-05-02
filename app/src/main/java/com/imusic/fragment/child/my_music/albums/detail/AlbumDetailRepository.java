@@ -19,7 +19,7 @@ public class AlbumDetailRepository {
         mSongDao = database.mSongDao();
     }
 
-    LiveData<List<Song>> getSong(int albumId) {
+    LiveData<List<Song>> getSong(long albumId) {
         if (mSongs == null) {
             mSongs = mSongDao.getSongByAlbumIdLiveData(albumId);
         }

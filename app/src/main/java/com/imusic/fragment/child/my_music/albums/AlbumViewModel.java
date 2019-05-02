@@ -28,7 +28,11 @@ public class AlbumViewModel extends AndroidViewModel {
         mAlbumRepository.deleteAll();
     }
 
-    void insert(Albums albums) {
+    public void insert(Albums albums) {
         mAlbumRepository.insert(albums);
+    }
+
+    int count() {
+        return mAlbumRepository.count();
     }
 }

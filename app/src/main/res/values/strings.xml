@@ -25,4 +25,5 @@
     <string name="tv_home">Home</string>
     <string name="tv_count_song">Song :</string>
     <string name="tv_delete">delete</string>
+    <string name="tv_no_album">No album</string>
 </resources>

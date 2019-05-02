@@ -89,4 +89,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     interface IOnItemClickListener {
         void onItemClick(Albums albums, int position);
     }
+
+    void setAlbums(ArrayList<Albums> albums){
+        mAlbums = albums;
+        notifyDataSetChanged();
+    }
 }

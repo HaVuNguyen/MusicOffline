@@ -14,6 +14,9 @@ public abstract class AlbumsDao {
     @Insert
     public abstract Long insert(Albums albums);
 
+    @Query("SELECT COUNT(id) FROM album_table")
+    public abstract int count();
+
     @Query("DELETE FROM album_table")
     public abstract void deleteAll();
 

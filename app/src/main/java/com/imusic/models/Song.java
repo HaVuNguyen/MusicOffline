@@ -56,12 +56,14 @@ public class Song implements Serializable {
         this.title = title;
     }
 
+    @Ignore
     public Song(long id, String title, long album_id) {
         this.id = id;
         this.title = title;
         this.album_id = album_id;
     }
 
+    @Ignore
     public Song(String title, String artist_name, long artist_id) {
         this.title = title;
         this.artist_name = artist_name;

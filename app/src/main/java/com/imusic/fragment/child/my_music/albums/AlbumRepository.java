@@ -46,21 +46,12 @@ public class AlbumRepository {
         }
     }
 
-    void insert(Albums albums){
-        new insert(mAlbumsDao).execute(albums);
+
+    void insert(Albums albums) {
+        mAlbumsDao.insert(albums);
     }
 
-    private static class insert extends AsyncTask<Albums,Void,Void>{
-        private AlbumsDao mAlbumsDao;
-
-        insert(AlbumsDao albumsDao){
-            mAlbumsDao = albumsDao;
-        }
-
-        @Override
-        protected Void doInBackground(Albums... albums) {
-            mAlbumsDao.insert(albums[0]);
-            return null;
-        }
+    int count() {
+        return mAlbumsDao.count();
     }
 }
