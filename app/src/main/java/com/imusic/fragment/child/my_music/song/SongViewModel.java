@@ -12,17 +12,26 @@ import java.util.List;
 public class SongViewModel extends AndroidViewModel {
     private SongRepository mSongRepository;
     private LiveData<List<Song>> mAllSongs;
+
     public SongViewModel(@NonNull Application application) {
         super(application);
         mSongRepository = new SongRepository(application);
         mAllSongs = mSongRepository.getAllSong();
     }
 
-    LiveData<List<Song>> getAllSongs(){
+    LiveData<List<Song>> getAllSongs() {
         return mAllSongs;
     }
 
-    void deleteALlSong(){
+    void deleteALlSong() {
         mSongRepository.deleteAll();
+    }
+
+    int count() {
+        return mSongRepository.count();
+    }
+
+    void insert(Song song) {
+        mSongRepository.insert(song);
     }
 }

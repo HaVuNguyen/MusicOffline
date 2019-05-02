@@ -10,11 +10,11 @@ import com.imusic.models.Song;
 
 import java.util.List;
 
-public class SongRepository {
+class SongRepository {
     private SongDao mSongDao;
     private LiveData<List<Song>> mAllSongs;
 
-    public SongRepository(Application application) {
+    SongRepository(Application application) {
         SRDatabase database = SRDatabase.getDatabase(application);
         mSongDao = database.mSongDao();
         mAllSongs = mSongDao.getAllSong();
@@ -44,4 +44,13 @@ public class SongRepository {
             return null;
         }
     }
+
+    void insert(Song song) {
+        mSongDao.insert(song);
+    }
+
+    int count(){
+        return mSongDao.count();
+    }
+
 }

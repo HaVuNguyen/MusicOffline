@@ -37,7 +37,6 @@ public class SongService extends Service {
         mSongs = new ArrayList<>();
         songPosn = 0;
         Song song = mSongs.get(songPosn);
-        mPlayer = MediaPlayer.create(getApplicationContext(), song.getId());
     }
 
     @Override

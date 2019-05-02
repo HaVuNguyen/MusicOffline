@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Song implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private int id = 0;
+    private long id = 0;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -26,27 +26,27 @@ public class Song implements Serializable {
     private String artist;
 
     @ColumnInfo(name = "album_id")
-    private int album_id = 0;
+    private long album_id = 0;
 
     @ColumnInfo(name = "album_name")
     private String album_name;
 
     @ColumnInfo(name = "artist_id")
-    private int artist_id = 0;
+    private long artist_id = 0;
 
     @ColumnInfo(name = "artist_name")
     private String artist_name;
 
 
     @Ignore
-    public Song(int id, String title, String artist) {
+    public Song(long id, String title, String artist) {
         this.id = id;
         this.title = title;
         this.artist = artist;
     }
 
     @Ignore
-    public Song(int id, String title) {
+    public Song(long id, String title) {
         this.id = id;
         this.title = title;
     }
@@ -56,13 +56,13 @@ public class Song implements Serializable {
         this.title = title;
     }
 
-    public Song(int id, String title, int album_id) {
+    public Song(long id, String title, long album_id) {
         this.id = id;
         this.title = title;
         this.album_id = album_id;
     }
 
-    public Song(String title, String artist_name, int artist_id) {
+    public Song(String title, String artist_name, long artist_id) {
         this.title = title;
         this.artist_name = artist_name;
         this.artist_id = artist_id;
@@ -71,11 +71,11 @@ public class Song implements Serializable {
     public Song() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -111,11 +111,11 @@ public class Song implements Serializable {
         this.artist = artist;
     }
 
-    public int getAlbum_id() {
+    public long getAlbum_id() {
         return album_id;
     }
 
-    public void setAlbum_id(int album_id) {
+    public void setAlbum_id(long album_id) {
         this.album_id = album_id;
     }
 
@@ -127,11 +127,11 @@ public class Song implements Serializable {
         this.album_name = album_name;
     }
 
-    public int getArtist_id() {
+    public long getArtist_id() {
         return artist_id;
     }
 
-    public void setArtist_id(int artist_id) {
+    public void setArtist_id(long artist_id) {
         this.artist_id = artist_id;
     }
 

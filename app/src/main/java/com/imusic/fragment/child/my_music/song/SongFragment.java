@@ -1,25 +1,29 @@
 package com.imusic.fragment.child.my_music.song;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.imusic.R;
+import com.imusic.SharedPreferenceHelper;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.listeners.IOnClickSongListener;
 import com.imusic.listeners.OnStartDragListener;
 import com.imusic.listeners.SimpleItemTouchHelperCallback;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,37 +57,63 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mListMuisc.setAdapter(mSongAdapter);
         mSongAdapter.setOnClickListener(this);
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
-        mSongViewModel.getAllSongs().observe(this, new Observer<List<Song>>() {
-            @Override
-            public void onChanged(@Nullable List<Song> songs) {
-                if (songs != null) {
-                    mSongs = new ArrayList<>(songs);
-                    mSongAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+
+        getSongList();
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mListMuisc);
-        ContentResolver musicResolver = getContext().getContentResolver();
-        Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+    }
 
-        //get song list
-        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
-        if (musicCursor != null && musicCursor.moveToFirst()) {
-            int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int pathColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-            do {
-                int song = musicCursor.getInt(idColumn);
-                String mNameSong = musicCursor.getString(titleColumn);
-                String mSinger = musicCursor.getString(artistColumn);
-                String mPath = musicCursor.getString(pathColumn);
-                mSongs.add(new Song(song, mNameSong, mSinger));
-            } while (musicCursor.moveToNext());
-        }
+    @SuppressLint("StaticFieldLeak")
+    private void getSongList() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (!SongFragment.this.mContext.getSharedPreferences(SharedPreferenceHelper.SHARED_PREF_NAME, Context.MODE_PRIVATE).getBoolean(Constant.SYNC_SONG, false) || mSongViewModel.count() == 0) {
+                    Cursor songCursor = SongFragment.this.getContext().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+
+                    if (songCursor != null && songCursor.moveToFirst()) {
+                        int titleColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+                        int idColumn = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
+                        int artistColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+                        do {
+                            long id = songCursor.getLong(idColumn);
+                            String mNameSong = songCursor.getString(titleColumn);
+                            String mSinger = songCursor.getString(artistColumn);
+
+                            Song song = new Song();
+                            song.setTitle(mNameSong);
+                            song.setArtist(mSinger);
+                            mSongViewModel.insert(song);
+                        } while (songCursor.moveToNext());
+                    }
+                    songCursor.close();
+                    SongFragment.this.mContext.getSharedPreferences(SharedPreferenceHelper.SHARED_PREF_NAME, Context.MODE_PRIVATE).edit().putBoolean(Constant.SYNC_SONG, true).apply();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mSongViewModel.getAllSongs().observe(SongFragment.this, new Observer<List<Song>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Song> songs) {
+                        if (songs != null) {
+                            mSongs = new ArrayList<>(songs);
+                            mSongAdapter.setSongs(mSongs);
+
+                            if (mSongs.size() == 0) {
+                                mTvNoData.setVisibility(View.VISIBLE);
+                            } else {
+                                mTvNoData.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                });
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
