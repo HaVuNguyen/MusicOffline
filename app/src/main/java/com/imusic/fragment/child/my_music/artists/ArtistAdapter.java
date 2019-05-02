@@ -78,4 +78,9 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     interface IOnClickArtist {
         void onItemClick(Artist artist, int position);
     }
+
+    void setArtists(ArrayList<Artist> artists){
+        mArtists = artists;
+        notifyDataSetChanged();
+    }
 }

@@ -2,6 +2,7 @@ package com.imusic.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
 import com.imusic.models.Artist;
@@ -18,4 +19,7 @@ public abstract class ArtistDao {
 
     @Query("SELECT COUNT(*) FROM artist_table")
     public abstract int getCount();
+
+    @Insert
+    public abstract long insert(Artist artist);
 }

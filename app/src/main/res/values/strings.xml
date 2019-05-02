@@ -26,4 +26,5 @@
     <string name="tv_count_song">Song :</string>
     <string name="tv_delete">delete</string>
     <string name="tv_no_album">No album</string>
+    <string name="tv_no_artist">No Artist</string>
 </resources>

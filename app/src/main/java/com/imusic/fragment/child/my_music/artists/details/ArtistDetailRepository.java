@@ -19,7 +19,7 @@ class ArtistDetailRepository {
         mSongDao = database.mSongDao();
     }
 
-    LiveData<List<Song>> getListLiveDataArtistSong(int artist_id) {
+    LiveData<List<Song>> getListLiveDataArtistSong(long artist_id) {
         mListLiveDataSong = mSongDao.getSongByArtistIdLiveData(artist_id);
         return mListLiveDataSong;
     }

@@ -17,7 +17,7 @@ public class ArtistDetailViewModel extends AndroidViewModel {
         mRepository = new ArtistDetailRepository(application);
     }
 
-    LiveData<List<Song>> getListLiveDataSongArtist(int artistId) {
+    LiveData<List<Song>> getListLiveDataSongArtist(long artistId) {
         return mRepository.getListLiveDataArtistSong(artistId);
     }
 }

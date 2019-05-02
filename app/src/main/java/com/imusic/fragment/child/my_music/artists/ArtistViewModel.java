@@ -11,13 +11,13 @@ import java.util.List;
 
 public class ArtistViewModel extends AndroidViewModel {
 
-    private ArtistRepository mArtistRepository;
+    private ArtistRepository mRepository;
     private LiveData<List<Artist>> mAllArtist;
 
     public ArtistViewModel(@NonNull Application application) {
         super(application);
-        mArtistRepository = new ArtistRepository(application);
-        mAllArtist = mArtistRepository.getAllArtist();
+        mRepository = new ArtistRepository(application);
+        mAllArtist = mRepository.getAllArtist();
     }
 
     LiveData<List<Artist>> getAllArtist() {
@@ -25,6 +25,14 @@ public class ArtistViewModel extends AndroidViewModel {
     }
 
     void deleteAllArtist() {
-        mArtistRepository.deleteAll();
+        mRepository.deleteAll();
+    }
+
+    void insert(Artist artist) {
+        mRepository.insert(artist);
+    }
+
+    int count() {
+        return mRepository.count();
     }
 }
