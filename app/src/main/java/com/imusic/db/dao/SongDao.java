@@ -1,4 +1,4 @@
-package com.imusic.db;
+package com.imusic.db.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -30,15 +30,18 @@ public abstract class SongDao {
     @Query("SELECT * FROM song_table WHERE title LIKE :keyword")
     public abstract List<Song> searchSong(String keyword);
 
-    @Query("SELECT * FROM song_table WHERE album_id=:album_id")
-    public abstract List<Song> getSongByAlbumId(int album_id);
-
-    @Query("SELECT * FROM song_table WHERE album_id=:album_id ORDER BY title ASC")
-    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(long album_id);
-
-    @Query("SELECT * FROM song_table WHERE album_name=:album_name AND song_path=:pathTrack")
-    public abstract List<Song> getSongByNameAndAlbumName(String album_name, String pathTrack);
-
     @Query("SELECT * FROM song_table WHERE artist_id=:artist_id ORDER BY title ASC")
     public abstract LiveData<List<Song>> getSongByArtistIdLiveData(long artist_id);
+
+    @Query("SELECT id FROM song_table WHERE title =:title")
+    public abstract List<Long> getIdSong(String title);
+
+    @Query("SELECT * FROM song_table WHERE id =:songId")
+    public abstract List<Song> getSongByID(long songId);
+
+    @Query("SELECT * FROM song_table ORDER BY title ASC")
+    public abstract List<Song> getAllSongTest();
+//
+//    @Query("SELECT * FROM song_table WHERE album_id=:album_id ORDER BY title ASC")
+//    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(long album_id);
 }

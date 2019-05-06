@@ -3,8 +3,6 @@ package com.imusic.fragment.child.my_music.albums.detail;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.database.Cursor;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
+import com.imusic.fragment.child.my_music.song.SongViewModel;
 import com.imusic.models.Albums;
 import com.imusic.models.Song;
 
@@ -35,7 +34,9 @@ public class AlbumDetailFragment extends BaseFragment {
     private ImageView mImvAlbums;
     private RecyclerView mRcAlbumDetail;
     private AlbumDetailViewModel mViewModel;
-    private ArrayList<Song> mSongs;
+    private ArrayList<Song> mListSongs;
+    private ArrayList<Long> mListSongByAlbumId;
+    private SongViewModel mSongViewModel;
 
     public static AlbumDetailFragment getInstance(Albums albums) {
         AlbumDetailFragment fragment = new AlbumDetailFragment();
@@ -50,20 +51,18 @@ public class AlbumDetailFragment extends BaseFragment {
 
     @Override
     protected void initComponents() {
-        mSongs = new ArrayList<>();
-        getSongByAlbum();
+        mListSongs = new ArrayList<>();
+        mListSongByAlbumId = new ArrayList<>();
         mTvTitleAlbums = mView.findViewById(R.id.tv_name_album);
         mImvAlbums = mView.findViewById(R.id.imv_albums_art);
         mImvBack = mView.findViewById(R.id.btn_back_album);
-
         mTvTitleAlbums.setText(mAlbums.getName());
-
         Glide.with(mContext)
                 .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.drawable.bg_album_default))
                 .load(mAlbums.getAlbumArt())
                 .into(mImvAlbums);
 
-        mAdapter = new AlbumDetailAdapter(mSongs, new AlbumDetailAdapter.IOnItemClickListener() {
+        mAdapter = new AlbumDetailAdapter(mListSongs, new AlbumDetailAdapter.IOnItemClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onItemClick(Song song) {
@@ -76,35 +75,34 @@ public class AlbumDetailFragment extends BaseFragment {
         mRcAlbumDetail.setAdapter(mAdapter);
 
         mViewModel = ViewModelProviders.of(this).get(AlbumDetailViewModel.class);
-        mViewModel.getSongs(mAlbums.getId()).observe(this, new Observer<List<Song>>() {
+        mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
+
+//        mViewModel.getSongByAlbumId();
+//        mViewModel.getSongs(mAlbums.getId()).observe(this, new Observer<List<Song>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Song> songs) {
+//                if (songs != null) {
+//                    mListSongs = new ArrayList<>(songs);
+//                    mAdapter.notifyDataSetChanged();
+//                }
+//            }
+        mViewModel.getSongByAlbumId(mAlbums.getId()).observe(this, new Observer<List<Long>>() {
             @Override
-            public void onChanged(@Nullable List<Song> songs) {
-                if (songs != null) {
-                    mSongs = new ArrayList<>(songs);
+            public void onChanged(@Nullable List<Long> longs) {
+                if (longs != null) {
+                    mListSongByAlbumId = new ArrayList<>(longs);
+                    for (Song song : mListSongs) {
+                        for (long id : mListSongByAlbumId) {
+                            long idSong = song.getId();
+                            if (id == idSong) {
+                                mSongViewModel.getSongById(idSong);
+                            }
+                        }
+                    }
                     mAdapter.notifyDataSetChanged();
                 }
             }
         });
-    }
-
-    private void getSongByAlbum() {
-        Cursor mediaCursor = mContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
-        if (mediaCursor != null && mediaCursor.moveToFirst()) {
-            int titleColumn = mediaCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int idColumn = mediaCursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int albumId = mediaCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-
-            do {
-                int thisId = mediaCursor.getInt(idColumn);
-                int thisalbumId = mediaCursor.getInt(albumId);
-                String thisTitle = mediaCursor.getString(titleColumn);
-                if (mAlbums.getId() == thisalbumId) {
-                    mSongs.add(new Song(thisId, thisTitle, thisalbumId));
-                }
-            }
-            while (mediaCursor.moveToNext());
-
-        }
     }
 
     @Override

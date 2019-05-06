@@ -10,28 +10,40 @@ import com.imusic.models.Song;
 import java.util.List;
 
 public class SongViewModel extends AndroidViewModel {
-    private SongRepository mSongRepository;
+    private SongRepository mRepository;
     private LiveData<List<Song>> mAllSongs;
 
     public SongViewModel(@NonNull Application application) {
         super(application);
-        mSongRepository = new SongRepository(application);
-        mAllSongs = mSongRepository.getAllSong();
+        mRepository = new SongRepository(application);
+        mAllSongs = mRepository.getAllSong();
     }
 
-    LiveData<List<Song>> getAllSongs() {
+    public LiveData<List<Song>> getAllSongs() {
         return mAllSongs;
     }
 
     void deleteALlSong() {
-        mSongRepository.deleteAll();
+        mRepository.deleteAll();
     }
 
     int count() {
-        return mSongRepository.count();
+        return mRepository.count();
     }
 
-    void insert(Song song) {
-        mSongRepository.insert(song);
+    long insert(Song song) {
+        return mRepository.insert(song);
+    }
+
+    List<Long> getIdByTitle(String title) {
+        return mRepository.getIdByTitle(title);
+    }
+
+    public List<Song> getSongById(long idSong) {
+        return mRepository.getSongById(idSong);
+    }
+
+    List<Song> getSongTest() {
+        return mRepository.getAllSongTest();
     }
 }

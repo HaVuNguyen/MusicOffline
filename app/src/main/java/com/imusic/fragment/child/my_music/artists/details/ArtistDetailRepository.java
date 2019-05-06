@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 
 import com.imusic.db.SRDatabase;
-import com.imusic.db.SongDao;
+import com.imusic.db.dao.SongDao;
 import com.imusic.models.Song;
 
 import java.util.List;

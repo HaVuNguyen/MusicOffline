@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.imusic.db.SRDatabase;
-import com.imusic.db.SongDao;
+import com.imusic.db.dao.SongDao;
 import com.imusic.models.Song;
 
 import java.util.List;
@@ -45,12 +45,21 @@ class SongRepository {
         }
     }
 
-    void insert(Song song) {
-        mSongDao.insert(song);
+    long insert(Song song) {
+        return mSongDao.insert(song);
     }
 
-    int count(){
+    int count() {
         return mSongDao.count();
     }
 
+    List<Long> getIdByTitle(String title) {
+        return mSongDao.getIdSong(title);
+    }
+
+    List<Song> getSongById(long idSong) {
+        return mSongDao.getSongByID(idSong);
+    }
+
+    List<Song> getAllSongTest(){return mSongDao.getAllSongTest();}
 }

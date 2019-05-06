@@ -9,12 +9,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.imusic.db.dao.AlbumSongDao;
+import com.imusic.db.dao.AlbumsDao;
+import com.imusic.db.dao.ArtistDao;
+import com.imusic.db.dao.PlaylistDao;
+import com.imusic.db.dao.SongDao;
+import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
 import com.imusic.models.Artist;
 import com.imusic.models.Playlist;
 import com.imusic.models.Song;
 
-@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class}, version = 2,exportSchema = false)
+@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class, AlbumSong.class}, version = 1, exportSchema = false)
 public abstract class SRDatabase extends RoomDatabase {
     public abstract SongDao mSongDao();
 
@@ -24,9 +30,11 @@ public abstract class SRDatabase extends RoomDatabase {
 
     public abstract PlaylistDao mPlaylistDao();
 
+    public abstract AlbumSongDao mAlbumSongDao();
+
     private static volatile SRDatabase INSTANCE;
 
-    public static final Migration MIGRATION_1_2 = new Migration(1,2) {
+    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE playlist_table" +

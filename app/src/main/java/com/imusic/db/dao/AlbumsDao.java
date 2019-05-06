@@ -1,4 +1,4 @@
-package com.imusic.db;
+package com.imusic.db.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

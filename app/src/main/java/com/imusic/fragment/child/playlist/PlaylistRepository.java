@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.imusic.db.PlaylistDao;
+import com.imusic.db.dao.PlaylistDao;
 import com.imusic.db.SRDatabase;
 import com.imusic.models.Playlist;
 

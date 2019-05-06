@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/dp_10">
+    android:layout_margin="@dimen/dp_10"
+    android:orientation="vertical">
 
     <com.github.siyamed.shapeimageview.RoundedImageView
         android:id="@+id/imv_albums"
@@ -21,9 +22,10 @@
 
     <TextView
         android:id="@+id/tv_title_albums"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/dp_5"
+        android:gravity="center"
         android:singleLine="true"
         android:text="@string/tv_albums"
         android:textColor="#000"
@@ -32,4 +34,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imv_albums" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

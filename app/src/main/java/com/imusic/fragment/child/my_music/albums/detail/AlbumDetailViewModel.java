@@ -5,20 +5,34 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.imusic.models.Song;
+import com.imusic.models.AlbumSong;
 
 import java.util.List;
 
 public class AlbumDetailViewModel extends AndroidViewModel {
 
-    private AlbumDetailRepository mAlbumDetailRepository;
+    private AlbumDetailRepository mRepository;
 
     public AlbumDetailViewModel(@NonNull Application application) {
         super(application);
-        mAlbumDetailRepository = new AlbumDetailRepository(application);
+        mRepository = new AlbumDetailRepository(application);
     }
 
-    LiveData<List<Song>> getSongs(long albumId) {
-        return mAlbumDetailRepository.getSong(albumId);
+    public long insert(AlbumSong albumSong) {
+        return mRepository.insert(albumSong);
     }
+
+    public LiveData<List<Long>> getSongByAlbumId(long albumId) {
+        return mRepository.getSongByAlbumId(albumId);
+    }
+
+    public List<AlbumSong> getSongTest() {
+        return mRepository.getSongTest();
+    }
+//    LiveData<List<Song>> getSongs(long albumId) {
+//        return mRepository.getSong(albumId);
+//    }
+//    LiveData<List<AlbumSong>> getSongByAlbum(long albumId) {
+//        return mRepository.getSongByAlbum(albumId);
+//    }
 }

@@ -4,7 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.imusic.db.AlbumsDao;
+import com.imusic.db.dao.AlbumsDao;
 import com.imusic.db.SRDatabase;
 import com.imusic.models.Albums;
 
@@ -47,8 +47,8 @@ public class AlbumRepository {
     }
 
 
-    void insert(Albums albums) {
-        mAlbumsDao.insert(albums);
+    long insert(Albums albums) {
+        return mAlbumsDao.insert(albums);
     }
 
     int count() {
