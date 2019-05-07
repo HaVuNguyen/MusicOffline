@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.imusic.R;
@@ -21,16 +20,21 @@ import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.albums.AlbumViewModel;
 import com.imusic.fragment.child.my_music.albums.detail.AlbumDetailViewModel;
+import com.imusic.fragment.child.my_music.artists.ArtistViewModel;
+import com.imusic.fragment.child.my_music.artists.details.ArtistDetailViewModel;
 import com.imusic.listeners.IOnClickSongListener;
 import com.imusic.listeners.OnStartDragListener;
 import com.imusic.listeners.SimpleItemTouchHelperCallback;
 import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
+import com.imusic.models.Artist;
+import com.imusic.models.ArtistSong;
 import com.imusic.models.Song;
 import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SongFragment extends BaseFragment implements IOnClickSongListener, OnStartDragListener {
 
@@ -38,6 +42,8 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     private SongViewModel mSongViewModel;
     private AlbumViewModel mAlbumViewModel;
     private AlbumDetailViewModel mADViewModel;
+    private ArtistViewModel mArtistViewModel;
+    private ArtistDetailViewModel mArtistDetailViewModel;
     private SongAdapter mSongAdapter;
     private ArrayList<Song> mSongs;
     private View mViewSearch;
@@ -64,6 +70,8 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
         mAlbumViewModel = ViewModelProviders.of(this).get(AlbumViewModel.class);
         mADViewModel = ViewModelProviders.of(this).get(AlbumDetailViewModel.class);
+        mArtistViewModel = ViewModelProviders.of(this).get(ArtistViewModel.class);
+        mArtistDetailViewModel = ViewModelProviders.of(this).get(ArtistDetailViewModel.class);
 
         getSongList();
 
@@ -73,14 +81,13 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
 
     }
 
-    @SuppressLint("StaticFieldLeak")
+    @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})
     private void getSongList() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if (!SongFragment.this.mContext.getSharedPreferences(SharedPreferenceHelper.SHARED_PREF_NAME, Context.MODE_PRIVATE).getBoolean(Constant.SYNC_SONG, false)
-                ) {
-                    Cursor songCursor = SongFragment.this.getContext().getContentResolver()
+                if (!SongFragment.this.mContext.getSharedPreferences(SharedPreferenceHelper.SHARED_PREF_NAME, Context.MODE_PRIVATE).getBoolean(Constant.SYNC_SONG, false)) {
+                    Cursor songCursor = Objects.requireNonNull(SongFragment.this.getContext()).getContentResolver()
                             .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
                                     null, null, null);
 
@@ -97,10 +104,9 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                             mSongViewModel.insert(song);
                         } while (songCursor.moveToNext());
                     }
-//                    mSongViewModel.getSongTest();
-//                    songCursor.close();
 
                     getAlbum();
+                    getArtist();
                     SongFragment.this.mContext.getSharedPreferences
                             (SharedPreferenceHelper.SHARED_PREF_NAME, Context.MODE_PRIVATE)
                             .edit().putBoolean(Constant.SYNC_SONG, true).apply();
@@ -132,6 +138,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})
     private void getAlbum() {
         Cursor albumCursor = SongFragment.this.mContext.getContentResolver()
                 .query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, null,
@@ -180,14 +187,60 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
 //        albumCursor.close();
     }
 
+    @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})
+    private void getArtist() {
+        Cursor artistCursor = SongFragment.this.mContext.getContentResolver()
+                .query(MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI, null,
+                        null, null, null);
+        if (artistCursor != null && artistCursor.moveToFirst()) {
+            int idArtistColumn = artistCursor.getColumnIndex(MediaStore.Audio.Artists._ID);
+            int nameArtistColumn = artistCursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST);
+            int countArtistColumn = artistCursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS);
+            do {
+                String nameArtist = artistCursor.getString(nameArtistColumn);
+                String countArtist = artistCursor.getString(countArtistColumn);
+                int thisIdArtist = artistCursor.getInt(idArtistColumn);
+
+                Artist artist = new Artist();
+                artist.setName(nameArtist);
+                artist.setCount(countArtist);
+                long artistId = mArtistViewModel.insert(artist);
+                // lấy title song =>  + id artist => add vô bảng trung gian
+                Cursor songArtistCursor = mContext.getContentResolver()
+                        .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+                                null, null, null);
+                if (songArtistCursor != null && songArtistCursor.moveToFirst()) {
+                    int titleColumn = songArtistCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+                    int idArtist = songArtistCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID);
+                    do {
+                        String thisTitle = songArtistCursor.getString(titleColumn);
+                        int thisIdArtistSong = songArtistCursor.getInt(idArtist);
+                        if (thisIdArtist == thisIdArtistSong) {
+                            List<Long> listIdSong = mSongViewModel.getIdByTitle(thisTitle);
+                            if (listIdSong.size() > 0) {
+                                long songId = listIdSong.get(0);
+                                ArtistSong artistSong = new ArtistSong();
+                                artistSong.setIdSong(songId);
+                                artistSong.setIdArtist(artistId);
+                                mArtistDetailViewModel.insert(artistSong);
+                            }
+                        }
+                    }while (songArtistCursor.moveToNext());
+                }
+
+            } while (artistCursor.moveToNext());
+        }
+    }
+
     @Override
     protected void addListener() {
 
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
-        getActivity().startActivity(PLayerActivity.getInstance(getActivity()));
+        Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
 //        getActivity().startService(SongService.getInstance(getContext().getApplicationContext()));
     }
 

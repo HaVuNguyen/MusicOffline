@@ -2,10 +2,9 @@ package com.imusic.fragment.child.my_music.artists;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
 
-import com.imusic.db.dao.ArtistDao;
 import com.imusic.db.SRDatabase;
+import com.imusic.db.dao.ArtistDao;
 import com.imusic.models.Artist;
 
 import java.util.List;
@@ -27,30 +26,7 @@ class ArtistRepository {
         return mAllArtist;
     }
 
-    void deleteAll() {
-        new deleteAllArtist(mArtistDao).execute();
-    }
-
-    private static class deleteAllArtist extends AsyncTask<Artist, Void, Void> {
-
-        private ArtistDao mArtistDao;
-
-        deleteAllArtist(ArtistDao artistDao) {
-            mArtistDao = artistDao;
-        }
-
-        @Override
-        protected Void doInBackground(Artist... artists) {
-            mArtistDao.deleteAll();
-            return null;
-        }
-    }
-
-    public void insert(Artist artist){
-        mArtistDao.insert(artist);
-    }
-
-    int count(){
-        return mArtistDao.getCount();
+    public long insert(Artist artist) {
+        return mArtistDao.insert(artist);
     }
 }

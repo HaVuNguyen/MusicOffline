@@ -12,22 +12,18 @@ public class Artist {
     private long id = 0;
 
     @ColumnInfo(name = "artist_name")
-    private String artist_name = "";
-
-    @ColumnInfo(name = "artist_image")
-    private String artist_image = null;
+    private String name = "";
 
     @ColumnInfo(name = "count_song")
-    private String count_song = "";
+    private String count = "";
 
     @Ignore
     public Artist() {
     }
 
-    public Artist(long id, String artist_name, String count_song) {
-        this.id = id;
-        this.artist_name = artist_name;
-        this.count_song = count_song;
+    public Artist(String name, String count) {
+        this.name = name;
+        this.count = count;
     }
 
     public long getId() {
@@ -38,27 +34,19 @@ public class Artist {
         this.id = id;
     }
 
-    public String getArtist_name() {
-        return artist_name;
+    public String getName() {
+        return name;
     }
 
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getArtist_image() {
-        return artist_image;
+    public String getCount() {
+        return count;
     }
 
-    public void setArtist_image(String artist_image) {
-        this.artist_image = artist_image;
-    }
-
-    public String getCount_song() {
-        return count_song;
-    }
-
-    public void setCount_song(String count_song) {
-        this.count_song = count_song;
+    public void setCount(String count) {
+        this.count = count;
     }
 }

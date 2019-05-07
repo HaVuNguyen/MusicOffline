@@ -35,7 +35,7 @@ public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapte
         Song song = mSongs.get(position);
         viewHolder.mImvSong.setImageResource(R.drawable.ic_headphones);
         viewHolder.mTvNameSong.setText(song.getTitle());
-        viewHolder.mTvNameSing.setText(song.getArtist_name());
+        viewHolder.mTvNameSing.setText(song.getArtist());
     }
 
     @Override

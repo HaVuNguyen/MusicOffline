@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.imusic.R;
 import com.imusic.models.Artist;
 
@@ -19,7 +17,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
 
     private ArrayList<Artist> mArtists;
     private IOnClickArtist mIOnClickArtist;
-    private View.OnClickListener mListener;
 
     ArtistAdapter(ArrayList<Artist> artists) {
         this.mArtists = artists;
@@ -33,19 +30,15 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup holder, int i) {
         View view = LayoutInflater.from(holder.getContext()).inflate(R.layout.item_atists, holder, false);
-        view.setOnClickListener(mListener);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         Artist artist = mArtists.get(i);
-        holder.mTvArtistName.setText(artist.getArtist_name());
-        Glide.with(holder.itemView.getContext())
-                .applyDefaultRequestOptions
-                        (RequestOptions.placeholderOf(R.drawable.ic_singer))
-                .load(artist.getArtist_image()).into(holder.mImvArtist);
-        holder.mTvCountSong.setText(artist.getCount_song());
+        holder.mTvArtistName.setText(artist.getName());
+        holder.mImvArtist.setImageResource(R.drawable.ic_singer);
+        holder.mTvCountSong.setText(artist.getCount());
     }
 
     @Override
@@ -55,14 +48,12 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private View mView;
         private ImageView mImvArtist;
         private TextView mTvArtistName;
         private TextView mTvCountSong;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mView = itemView;
             mImvArtist = itemView.findViewById(R.id.imv_artist);
             mTvArtistName = itemView.findViewById(R.id.tv_title_artist);
             mTvCountSong = itemView.findViewById(R.id.tv_count_artist);
@@ -79,7 +70,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
         void onItemClick(Artist artist, int position);
     }
 
-    void setArtists(ArrayList<Artist> artists){
+    void setArtists(ArrayList<Artist> artists) {
         mArtists = artists;
         notifyDataSetChanged();
     }

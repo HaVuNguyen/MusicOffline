@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -11,15 +12,17 @@ import android.support.annotation.NonNull;
 import com.imusic.db.dao.AlbumSongDao;
 import com.imusic.db.dao.AlbumsDao;
 import com.imusic.db.dao.ArtistDao;
+import com.imusic.db.dao.ArtistSongDao;
 import com.imusic.db.dao.PlaylistDao;
 import com.imusic.db.dao.SongDao;
 import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
 import com.imusic.models.Artist;
+import com.imusic.models.ArtistSong;
 import com.imusic.models.Playlist;
 import com.imusic.models.Song;
 
-@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class, AlbumSong.class}, version = 1, exportSchema = false)
+@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class, AlbumSong.class, ArtistSong.class}, version = 1, exportSchema = false)
 public abstract class SRDatabase extends RoomDatabase {
     public abstract SongDao mSongDao();
 
@@ -30,6 +33,8 @@ public abstract class SRDatabase extends RoomDatabase {
     public abstract PlaylistDao mPlaylistDao();
 
     public abstract AlbumSongDao mAlbumSongDao();
+
+    public abstract ArtistSongDao mArtistSongDao();
 
     private static volatile SRDatabase INSTANCE;
 

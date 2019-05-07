@@ -24,15 +24,7 @@ public class ArtistViewModel extends AndroidViewModel {
         return mAllArtist;
     }
 
-    void deleteAllArtist() {
-        mRepository.deleteAll();
-    }
-
-    void insert(Artist artist) {
-        mRepository.insert(artist);
-    }
-
-    int count() {
-        return mRepository.count();
+    public long insert(Artist artist) {
+        return mRepository.insert(artist);
     }
 }
