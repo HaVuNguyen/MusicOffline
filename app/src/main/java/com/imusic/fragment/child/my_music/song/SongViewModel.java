@@ -19,7 +19,7 @@ public class SongViewModel extends AndroidViewModel {
         mAllSongs = mRepository.getAllSong();
     }
 
-    LiveData<List<Song>> getAllSongs() {
+    public LiveData<List<Song>> getAllSongs() {
         return mAllSongs;
     }
 

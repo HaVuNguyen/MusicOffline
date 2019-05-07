@@ -32,4 +32,5 @@
     <string name="tv_ok">OK</string>
     <string name="tv_playlist_name">Playlist name</string>
     <string name="tv_create_playlist">Create playlist</string>
+    <string name="tv_add_song_to_playlist">Add song to playlist</string>
 </resources>

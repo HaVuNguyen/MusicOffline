@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.imusic.R;
 import com.imusic.fragment.child.BaseFragment;
+import com.imusic.fragment.child.playlist.details.PlaylistDetailFragment;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Playlist;
 import com.imusic.view.AddEditPlaylistDialog;
@@ -37,12 +38,13 @@ public class PlaylistFragment extends BaseFragment {
         mAdapter = new PlaylistAdapter(mPlaylists, new PlaylistAdapter.IOnClickListener() {
             @Override
             public void onItemClick(Playlist playlist) {
-                Toast.makeText(mContext, "Coming", Toast.LENGTH_SHORT).show();
+                ((BaseGroupFragment) getParentFragment()).addFragmentNotReloadContent(PlaylistDetailFragment.getInstance(playlist));
             }
 
             @Override
             public void onDeleteItem(Playlist playlist) {
-                Toast.makeText(mContext, "Delete", Toast.LENGTH_SHORT).show();
+                mViewModel.deletePlaylist(playlist);
+                Toast.makeText(mContext, "Delete playlist successfully", Toast.LENGTH_SHORT).show();
             }
         });
         mRcPlaylist.setLayoutManager(new LinearLayoutManager(mContext));

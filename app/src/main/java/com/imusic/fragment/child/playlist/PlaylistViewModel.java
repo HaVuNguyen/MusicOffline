@@ -11,22 +11,26 @@ import java.util.List;
 
 public class PlaylistViewModel extends AndroidViewModel {
 
-    private PlaylistRepository mPlaylistRepository;
+    private PlaylistRepository mRepository;
 
     public PlaylistViewModel(@NonNull Application application) {
         super(application);
-        mPlaylistRepository = new PlaylistRepository(application);
+        mRepository = new PlaylistRepository(application);
     }
 
     public void insert(Playlist playlist) {
-        mPlaylistRepository.insert(playlist);
+        mRepository.insert(playlist);
     }
 
-    public LiveData<List<Playlist>> getAllPlaylist() {
-        return mPlaylistRepository.getAllPlaylist();
+    LiveData<List<Playlist>> getAllPlaylist() {
+        return mRepository.getAllPlaylist();
     }
 
     public void delete() {
-        mPlaylistRepository.deleteAll();
+        mRepository.deleteAll();
+    }
+
+    void deletePlaylist(Playlist playlist) {
+        mRepository.deleteByPlaylist(playlist);
     }
 }

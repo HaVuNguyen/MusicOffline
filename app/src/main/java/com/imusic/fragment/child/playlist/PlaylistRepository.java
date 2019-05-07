@@ -46,26 +46,6 @@ public class PlaylistRepository {
             return null;
         }
     }
-//
-//    void insertPlaylist(Playlist playlist) {
-//        new insertPlaylistAsync(mPlaylistDao).execute(playlist);
-//    }
-//
-//    private static class insertPlaylistAsync extends AsyncTask<Playlist, Void, Long> {
-//
-//        private PlaylistDao mPlaylistDaoAsync;
-//
-//        insertPlaylistAsync(PlaylistDao playlistDao) {
-//            this.mPlaylistDaoAsync = playlistDao;
-//        }
-//
-//        @Override
-//        protected Long doInBackground(Playlist... playlists) {
-//            Long id = mPlaylistDaoAsync.insert(playlists[0]);
-//            return id;
-//        }
-//    }
-
 
     void uppdatePlaylist(Playlist playlist) {
         new updatePlaylistAysnc(mPlaylistDao).execute(playlist);
@@ -104,4 +84,28 @@ public class PlaylistRepository {
             return null;
         }
     }
+
+    void deleteById(long id) {
+        mPlaylistDao.delete(id);
+    }
+
+    void deleteByPlaylist(Playlist playlist) {
+        new deletePlaylistAsync(mPlaylistDao).execute(playlist);
+    }
+
+    private static class deletePlaylistAsync extends AsyncTask<Playlist, Void, Void> {
+
+        private PlaylistDao mPlaylistDaoAsync;
+
+        deletePlaylistAsync(PlaylistDao dao) {
+            mPlaylistDaoAsync = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Playlist... playlists) {
+            mPlaylistDaoAsync.deleteByPlaylist(playlists[0]);
+            return null;
+        }
+    }
+
 }
