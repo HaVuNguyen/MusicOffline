@@ -28,4 +28,8 @@
     <string name="tv_no_album">No album</string>
     <string name="tv_no_artist">No Artist</string>
     <string name="tv_create_playlist_success">Create playlist success</string>
+    <string name="tv_time">00:00</string>
+    <string name="tv_ok">OK</string>
+    <string name="tv_playlist_name">Playlist name</string>
+    <string name="tv_create_playlist">Create playlist</string>
 </resources>

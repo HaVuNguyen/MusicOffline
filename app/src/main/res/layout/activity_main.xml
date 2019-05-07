@@ -16,7 +16,7 @@
             android:id="@+id/frame_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/view_player"
@@ -132,7 +132,6 @@
                 android:src="@drawable/bg_player"
                 app:civ_border_color="#FFF"
                 app:civ_border_width="@dimen/dp_2" />
-
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
