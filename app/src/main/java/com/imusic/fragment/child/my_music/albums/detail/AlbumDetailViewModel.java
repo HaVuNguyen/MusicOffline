@@ -22,17 +22,7 @@ public class AlbumDetailViewModel extends AndroidViewModel {
         return mRepository.insert(albumSong);
     }
 
-    public LiveData<List<Long>> getSongByAlbumId(long albumId) {
+    LiveData<List<Long>> getSongByAlbumId(long albumId) {
         return mRepository.getSongByAlbumId(albumId);
     }
-
-    public List<AlbumSong> getSongTest() {
-        return mRepository.getSongTest();
-    }
-//    LiveData<List<Song>> getSongs(long albumId) {
-//        return mRepository.getSong(albumId);
-//    }
-//    LiveData<List<AlbumSong>> getSongByAlbum(long albumId) {
-//        return mRepository.getSongByAlbum(albumId);
-//    }
 }

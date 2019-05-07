@@ -4,7 +4,6 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -34,13 +33,6 @@ public abstract class SRDatabase extends RoomDatabase {
 
     private static volatile SRDatabase INSTANCE;
 
-    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE playlist_table" +
-                    " ADD COLUMN from_users INTEGER DEFAULT 0 NOT NULL");
-        }
-    };
 
     public static SRDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -48,8 +40,6 @@ public abstract class SRDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             SRDatabase.class, "music_database")
-                            .addCallback(sCallback)
-                            .addMigrations(MIGRATION_1_2)
                             .fallbackToDestructiveMigration()
                             .build();
                 }

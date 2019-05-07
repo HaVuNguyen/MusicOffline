@@ -11,10 +11,6 @@ import java.util.List;
 
 @Dao
 public abstract class SongDao {
-
-//    @Query("DELETE  FROM song_table WHERE song_id = id")
-//    abstract void deleteById(int song_id);
-
     @Insert
     public abstract long insert(Song song);
 
@@ -41,7 +37,4 @@ public abstract class SongDao {
 
     @Query("SELECT * FROM song_table ORDER BY title ASC")
     public abstract List<Song> getAllSongTest();
-//
-//    @Query("SELECT * FROM song_table WHERE album_id=:album_id ORDER BY title ASC")
-//    public abstract LiveData<List<Song>> getSongByAlbumIdLiveData(long album_id);
 }

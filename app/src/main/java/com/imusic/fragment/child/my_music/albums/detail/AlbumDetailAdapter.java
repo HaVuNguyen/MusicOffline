@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.ViewHolder> {
 
-    ArrayList<Song> mSongs;
+    private ArrayList<Song> mSongs;
     private IOnItemClickListener mListener;
 
     AlbumDetailAdapter(ArrayList<Song> data, IOnItemClickListener iOnItemClickListener) {
@@ -26,7 +26,7 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int position) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false));
     }
 
     @Override

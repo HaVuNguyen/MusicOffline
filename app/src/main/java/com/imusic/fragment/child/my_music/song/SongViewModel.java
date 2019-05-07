@@ -19,12 +19,8 @@ public class SongViewModel extends AndroidViewModel {
         mAllSongs = mRepository.getAllSong();
     }
 
-    public LiveData<List<Song>> getAllSongs() {
+    LiveData<List<Song>> getAllSongs() {
         return mAllSongs;
-    }
-
-    void deleteALlSong() {
-        mRepository.deleteAll();
     }
 
     int count() {
@@ -41,9 +37,5 @@ public class SongViewModel extends AndroidViewModel {
 
     public List<Song> getSongById(long idSong) {
         return mRepository.getSongById(idSong);
-    }
-
-    List<Song> getSongTest() {
-        return mRepository.getAllSongTest();
     }
 }

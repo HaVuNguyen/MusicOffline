@@ -11,28 +11,24 @@ import java.util.List;
 
 public class AlbumViewModel extends AndroidViewModel {
 
-    private AlbumRepository mAlbumRepository;
+    private AlbumRepository mRepository;
     private LiveData<List<Albums>> mAllAlbums;
 
     public AlbumViewModel(@NonNull Application application) {
         super(application);
-        mAlbumRepository = new AlbumRepository(application);
-        mAllAlbums = mAlbumRepository.getAllAlbums();
+        mRepository = new AlbumRepository(application);
+        mAllAlbums = mRepository.getAllAlbums();
     }
 
     LiveData<List<Albums>> getAllAlbums() {
         return mAllAlbums;
     }
 
-    void deleteAllAlbum() {
-        mAlbumRepository.deleteAll();
-    }
-
     public long insert(Albums albums) {
-        return mAlbumRepository.insert(albums);
+        return mRepository.insert(albums);
     }
 
     public int count() {
-        return mAlbumRepository.count();
+        return mRepository.count();
     }
 }

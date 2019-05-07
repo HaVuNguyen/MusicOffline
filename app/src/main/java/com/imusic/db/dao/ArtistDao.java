@@ -22,4 +22,7 @@ public abstract class ArtistDao {
 
     @Insert
     public abstract long insert(Artist artist);
+
+    @Query("SELECT * FROM artist_table")
+    public abstract List<Artist> testGetArtist();
 }

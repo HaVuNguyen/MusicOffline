@@ -3,6 +3,7 @@ package com.imusic.fragment.child.my_music.albums.detail;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,6 @@ public class AlbumDetailFragment extends BaseFragment {
     private Albums mAlbums;
     private TextView mTvTitleAlbums;
     private ImageView mImvAlbums;
-    private RecyclerView mRcAlbumDetail;
     private AlbumDetailViewModel mViewModel;
     private ArrayList<Song> mListSongs;
     private ArrayList<Long> mListSongByAlbumId;
@@ -70,39 +70,42 @@ public class AlbumDetailFragment extends BaseFragment {
                 Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
             }
         });
-        mRcAlbumDetail = mView.findViewById(R.id.list_album_detail);
-        mRcAlbumDetail.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRcAlbumDetail.setAdapter(mAdapter);
+        RecyclerView rcAlbumDetail = mView.findViewById(R.id.list_album_detail);
+        rcAlbumDetail.setLayoutManager(new LinearLayoutManager(getContext()));
+        rcAlbumDetail.setAdapter(mAdapter);
 
         mViewModel = ViewModelProviders.of(this).get(AlbumDetailViewModel.class);
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
 
-//        mViewModel.getSongByAlbumId();
-//        mViewModel.getSongs(mAlbums.getId()).observe(this, new Observer<List<Song>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Song> songs) {
-//                if (songs != null) {
-//                    mListSongs = new ArrayList<>(songs);
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//            }
         mViewModel.getSongByAlbumId(mAlbums.getId()).observe(this, new Observer<List<Long>>() {
+            @SuppressLint("StaticFieldLeak")
             @Override
             public void onChanged(@Nullable List<Long> longs) {
                 if (longs != null) {
                     mListSongByAlbumId = new ArrayList<>(longs);
-                    for (Song song : mListSongs) {
-                        for (long id : mListSongByAlbumId) {
-                            long idSong = song.getId();
-                            if (id == idSong) {
-                                mSongViewModel.getSongById(idSong);
+                    mListSongs.clear();
+                    new AsyncTask<Long, Void, List<Song>>() {
+                        @Override
+                        protected List<Song> doInBackground(Long... longs) {
+                            for (long id : mListSongByAlbumId) {
+                                List<Song> listSongById = mSongViewModel.getSongById(id);
+                                if (listSongById.size() > 0) {
+                                    mListSongs.add(listSongById.get(0));
+                                }
                             }
+                            return null;
                         }
-                    }
-                    mAdapter.notifyDataSetChanged();
+
+                        @Override
+                        protected void onPostExecute(List<Song> songs) {
+                            super.onPostExecute(songs);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });
+
     }
 
     @Override
