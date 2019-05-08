@@ -28,10 +28,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private View.OnClickListener mOnClickListener;
     private IOnClickSongListener mListener;
     private final OnStartDragListener mDragStartListener;
+    private IOnAddClickListener mOnAddClickListener;
+    private boolean isAdd = false;
 
-    public SongAdapter(ArrayList<Song> songs,OnStartDragListener listener) {
+    public SongAdapter(ArrayList<Song> songs, boolean TYPE, OnStartDragListener listener, IOnAddClickListener onAddClickListener) {
         this.mSongs = songs;
+        isAdd = TYPE;
         mDragStartListener = listener;
+        mOnAddClickListener = onAddClickListener;
     }
 
     public void setOnClickListener(IOnClickSongListener onClickListener) {
@@ -49,21 +53,34 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final SongAdapter.SongViewHolder holder, int i) {
-        Song song = mSongs.get(i);
+        final Song song = mSongs.get(i);
         holder.mImvMusic.setImageResource(R.drawable.ic_headphones);
-        holder.mImvMenu.setImageResource(R.drawable.ic_drag_reorder);
         holder.mTvArtist.setText(song.getArtist());
         holder.mTvTitle.setText(song.getTitle());
         holder.itemView.setTag(song);
-        holder.mImvMenu.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+
+        if (!isAdd) {
+            holder.mImvMenu.setImageResource(R.drawable.ic_drag_reorder);
+            holder.mImvMenu.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        } else {
+            holder.mImvMenu.setImageResource(R.drawable.bg_add);
+            holder.mImvMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnAddClickListener.onAddItem(song);
+                    holder.mImvMenu.setSelected(true);
+                }
+            });
+            holder.mImvMenu.setSelected(false);
+        }
     }
 
     @Override
@@ -121,6 +138,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     void setSongs(ArrayList<Song> songs) {
         mSongs = songs;
         notifyDataSetChanged();
+    }
+
+    interface IOnAddClickListener {
+        void onAddItem(Song song);
     }
 
     public Song getSongAtPosition(int position) {

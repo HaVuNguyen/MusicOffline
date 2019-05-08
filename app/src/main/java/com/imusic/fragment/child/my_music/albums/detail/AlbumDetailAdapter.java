@@ -17,9 +17,11 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
 
     private ArrayList<Song> mSongs;
     private IOnItemClickListener mListener;
+    private boolean isAdd = false;
 
-    AlbumDetailAdapter(ArrayList<Song> data, IOnItemClickListener iOnItemClickListener) {
+    AlbumDetailAdapter(ArrayList<Song> data, boolean TYPE, IOnItemClickListener iOnItemClickListener) {
         this.mSongs = data;
+        this.isAdd = TYPE;
         this.mListener = iOnItemClickListener;
     }
 
@@ -30,10 +32,23 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Song song = mSongs.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final Song song = mSongs.get(position);
         holder.mTvNameAlbumDetail.setText(song.getTitle());
         holder.mImvAlbumDetail.setImageResource(R.drawable.bg_album_default);
+        if (!isAdd) {
+            holder.mImvAdd.setVisibility(View.GONE);
+        } else {
+            holder.mImvAdd.setImageResource(R.drawable.bg_add);
+            holder.mImvAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onAddItem(song);
+                    holder.mImvAdd.setSelected(true);
+                }
+            });
+            holder.mImvAdd.setSelected(false);
+        }
     }
 
     @Override
@@ -44,11 +59,13 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView mImvAlbumDetail;
         private TextView mTvNameAlbumDetail;
+        private ImageView mImvAdd;
 
-        ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull final View itemView) {
             super(itemView);
             mImvAlbumDetail = itemView.findViewById(R.id.imv_albums_detail);
             mTvNameAlbumDetail = itemView.findViewById(R.id.tv_name_album_detail);
+            mImvAdd = itemView.findViewById(R.id.imv_add);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -61,5 +78,7 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
 
     interface IOnItemClickListener {
         void onItemClick(Song song);
+
+        void onAddItem(Song song);
     }
 }

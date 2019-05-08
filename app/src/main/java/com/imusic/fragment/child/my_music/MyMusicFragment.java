@@ -1,6 +1,5 @@
 package com.imusic.fragment.child.my_music;
 
-
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -10,10 +9,16 @@ import com.imusic.fragment.child.my_music.albums.AlbumsFragment;
 import com.imusic.fragment.child.my_music.artists.ArtistFragment;
 import com.imusic.fragment.child.my_music.song.SongFragment;
 import com.imusic.fragment.group.BaseGroupFragment;
+import com.imusic.ultils.Constant;
 
 public class MyMusicFragment extends BaseFragment {
     private View mTabHome, mTabAlbum, mTabArtist, mCurrentTab;
     private Fragment mCurrentFragment = new Fragment();
+    boolean intent;
+
+    public MyMusicFragment() {
+
+    }
 
     @Override
     protected int initLayout() {
@@ -33,19 +38,32 @@ public class MyMusicFragment extends BaseFragment {
         mCurrentFragment = new SongFragment();
         replaceFragment(mCurrentFragment);
         initNavigation();
+
+        intent = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
     }
 
     @Override
     protected void addListener() {
-        setTitle(getString(R.string.tv_my_music));
-        hiddenNavRight();
-        showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                assert getParentFragment() != null;
-                ((BaseGroupFragment) getParentFragment()).openMenu();
-            }
-        });
+        if (intent) {
+            hiddenNavRight();
+            setTitle(getString(R.string.tv_add_song_to_playlist));
+            showNavLeft(R.drawable.ic_back, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().finish();
+                }
+            });
+        } else {
+            setTitle(getString(R.string.tv_my_music));
+            hiddenNavRight();
+            showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    assert getParentFragment() != null;
+                    ((BaseGroupFragment) getParentFragment()).openMenu();
+                }
+            });
+        }
 
         mTabHome.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -33,4 +33,8 @@ public class PlaylistViewModel extends AndroidViewModel {
     void deletePlaylist(Playlist playlist) {
         mRepository.deleteByPlaylist(playlist);
     }
+
+    public void updatePlaylist(Playlist playlist) {
+        mRepository.updatePlaylist(playlist);
+    }
 }

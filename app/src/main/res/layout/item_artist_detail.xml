@@ -9,11 +9,11 @@
         android:id="@+id/imv_song_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/tv_artist"
         android:src="@drawable/ic_headphones"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/tv_artist" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -44,4 +44,14 @@
             android:textSize="@dimen/text_size_15"
             android:textStyle="normal" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imvAddSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/tv_add_song_to_playlist"
+        android:src="@drawable/bg_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

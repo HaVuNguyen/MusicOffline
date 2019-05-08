@@ -34,4 +34,8 @@
     <string name="tv_create_playlist">Create playlist</string>
     <string name="tv_add_song_to_playlist">Add song to playlist</string>
     <string name="tv_add_song_to_favorite">Add song to favorite</string>
+    <string name="tv_edit_playlist">Edit Playlist</string>
+    <string name="tv_please_enter_playlist_name">Please enter playlist name</string>
+    <string name="tv_delete_playlist_successfully">Delete playlist successfully</string>
+    <string name="tv_edit_name_playlist_successfully">Edit name playlist successfully</string>
 </resources>

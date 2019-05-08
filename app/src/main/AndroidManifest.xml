@@ -25,6 +25,8 @@
         <activity android:name=".activities.PLayerActivity" >
 
         </activity>
+        <activity android:name=".fragment.child.playlist.addSong.AddSongToPlaylistActivity" />
+
         <service android:name=".SongService"/>
     </application>
 </manifest>

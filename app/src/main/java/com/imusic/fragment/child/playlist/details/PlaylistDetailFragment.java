@@ -3,6 +3,7 @@ package com.imusic.fragment.child.playlist.details;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,10 +17,13 @@ import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
-import com.imusic.fragment.child.playlist.addSong.SongAddToPlaylistFragment;
+import com.imusic.fragment.child.playlist.PlaylistViewModel;
+import com.imusic.fragment.child.playlist.addSong.AddSongToPlaylistActivity;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Playlist;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
+import com.imusic.view.AddEditPlaylistDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,7 @@ public class PlaylistDetailFragment extends BaseFragment {
     private PlaylistDetailViewModel mViewModel;
     private ArrayList<Long> mListIdSong;
     private SongViewModel mSongViewModel;
+    private PlaylistViewModel mPlaylistViewModel;
 
     public static PlaylistDetailFragment getInstance(Playlist playlist) {
         PlaylistDetailFragment fragment = new PlaylistDetailFragment();
@@ -77,6 +82,7 @@ public class PlaylistDetailFragment extends BaseFragment {
         mRcSong.setAdapter(mAdapter);
         mViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
+        mPlaylistViewModel = ViewModelProviders.of(this).get(PlaylistViewModel.class);
         mViewModel.getIdSongByIdPlaylist(mPlaylist.getId()).observe(this, new Observer<List<Long>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
@@ -124,19 +130,32 @@ public class PlaylistDetailFragment extends BaseFragment {
         });
 
         mImvAddSong.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
-//                Toast.makeText(mContext, "Add song to playlist", Toast.LENGTH_SHORT).show();
-                if (getParentFragment() != null) {
-                    ((BaseGroupFragment) getParentFragment()).addFragmentNotReloadContent(SongAddToPlaylistFragment.getInstance(mPlaylist));
-                }
+                Intent intent = new Intent(mContext, AddSongToPlaylistActivity.class);
+                intent.putExtra(Constant.TYPE_ADD_SONG, true);
+                intent.putExtra(Constant.TYPE_PLAYLIST, mPlaylist);
+                mContext.startActivity(intent);
             }
         });
 
         mTvNamePlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Edit name playlist", Toast.LENGTH_SHORT).show();
+                if (mPlaylist.getFromUsers() == 1) {
+                    AddEditPlaylistDialog dialog = new AddEditPlaylistDialog(mContext, mPlaylist, new AddEditPlaylistDialog.IOnSubmitListener() {
+                        @Override
+                        public void submit(String name) {
+                            mPlaylist.setTitle(name);
+                            mPlaylistViewModel.updatePlaylist(mPlaylist);
+                            mTvNamePlaylist.setText(mPlaylist.getTitle());
+                            mAdapter.notifyDataSetChanged();
+//                            Toast.makeText(mContext, mContext.getString(R.string.tv_edit_name_playlist_successfully), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dialog.show();
+                }
             }
         });
     }

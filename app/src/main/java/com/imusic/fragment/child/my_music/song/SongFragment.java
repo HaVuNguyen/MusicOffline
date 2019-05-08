@@ -22,6 +22,7 @@ import com.imusic.fragment.child.my_music.albums.AlbumViewModel;
 import com.imusic.fragment.child.my_music.albums.detail.AlbumDetailViewModel;
 import com.imusic.fragment.child.my_music.artists.ArtistViewModel;
 import com.imusic.fragment.child.my_music.artists.details.ArtistDetailViewModel;
+import com.imusic.fragment.child.playlist.details.PlaylistDetailViewModel;
 import com.imusic.listeners.IOnClickSongListener;
 import com.imusic.listeners.OnStartDragListener;
 import com.imusic.listeners.SimpleItemTouchHelperCallback;
@@ -29,6 +30,8 @@ import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
 import com.imusic.models.Artist;
 import com.imusic.models.ArtistSong;
+import com.imusic.models.Playlist;
+import com.imusic.models.PlaylistSong;
 import com.imusic.models.Song;
 import com.imusic.ultils.Constant;
 
@@ -48,9 +51,8 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     private ArrayList<Song> mSongs;
     private View mViewSearch;
     private ItemTouchHelper mItemTouchHelper;
-
-    public SongFragment() {
-    }
+    private PlaylistDetailViewModel mDetailViewModel;
+    private Playlist mPlaylist;
 
     @Override
     protected int initLayout() {
@@ -62,17 +64,39 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mSongs = new ArrayList<>();
         mTvNoData = mView.findViewById(R.id.tv_no_data);
         mViewSearch = mView.findViewById(R.id.layout_search);
-        mSongAdapter = new SongAdapter(mSongs, this);
-        RecyclerView listMusic = mView.findViewById(R.id.list_music);
-        listMusic.setLayoutManager(new LinearLayoutManager(getContext()));
-        listMusic.setAdapter(mSongAdapter);
-        mSongAdapter.setOnClickListener(this);
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
         mAlbumViewModel = ViewModelProviders.of(this).get(AlbumViewModel.class);
         mADViewModel = ViewModelProviders.of(this).get(AlbumDetailViewModel.class);
         mArtistViewModel = ViewModelProviders.of(this).get(ArtistViewModel.class);
         mArtistDetailViewModel = ViewModelProviders.of(this).get(ArtistDetailViewModel.class);
+        mDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
 
+        final boolean intent = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG,false);
+        mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
+        mSongAdapter = new SongAdapter(mSongs, intent, this, new SongAdapter.IOnAddClickListener() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public void onAddItem(Song song) {
+                if (intent){
+                    final long idSong = song.getId();
+                    final long idPlaylist = mPlaylist.getId();
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            PlaylistSong playlistSong = new PlaylistSong();
+                            playlistSong.setSongId(idSong);
+                            playlistSong.setPlaylistId(idPlaylist);
+                            mDetailViewModel.insert(playlistSong);
+                            return null;
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+        });
+        RecyclerView listMusic = mView.findViewById(R.id.list_music);
+        listMusic.setLayoutManager(new LinearLayoutManager(getContext()));
+        listMusic.setAdapter(mSongAdapter);
+        mSongAdapter.setOnClickListener(this);
         getSongList();
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
@@ -225,7 +249,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                                 mArtistDetailViewModel.insert(artistSong);
                             }
                         }
-                    }while (songArtistCursor.moveToNext());
+                    } while (songArtistCursor.moveToNext());
                 }
 
             } while (artistCursor.moveToNext());

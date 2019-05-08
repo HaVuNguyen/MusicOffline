@@ -18,8 +18,12 @@ import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
+import com.imusic.fragment.child.playlist.details.PlaylistDetailViewModel;
 import com.imusic.models.Albums;
+import com.imusic.models.Playlist;
+import com.imusic.models.PlaylistSong;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,8 @@ public class AlbumDetailFragment extends BaseFragment {
     private ArrayList<Song> mListSongs;
     private ArrayList<Long> mListSongByAlbumId;
     private SongViewModel mSongViewModel;
+    private Playlist mPlaylist;
+    private PlaylistDetailViewModel mDetailViewModel;
 
     public static AlbumDetailFragment getInstance(Albums albums) {
         AlbumDetailFragment fragment = new AlbumDetailFragment();
@@ -62,12 +68,35 @@ public class AlbumDetailFragment extends BaseFragment {
                 .load(mAlbums.getAlbumArt())
                 .into(mImvAlbums);
 
-        mAdapter = new AlbumDetailAdapter(mListSongs, new AlbumDetailAdapter.IOnItemClickListener() {
+        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
+        mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
+
+        mDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
+        mAdapter = new AlbumDetailAdapter(mListSongs, isAdd, new AlbumDetailAdapter.IOnItemClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onItemClick(Song song) {
                 Toast.makeText(mContext, "Play music", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
+            }
+
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public void onAddItem(Song song) {
+                if (isAdd) {
+                    final long idSong = song.getId();
+                    final long idPlaylist = mPlaylist.getId();
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            PlaylistSong playlistSong = new PlaylistSong();
+                            playlistSong.setSongId(idSong);
+                            playlistSong.setPlaylistId(idPlaylist);
+                            mDetailViewModel.insert(playlistSong);
+                            return null;
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
         });
         RecyclerView rcAlbumDetail = mView.findViewById(R.id.list_album_detail);

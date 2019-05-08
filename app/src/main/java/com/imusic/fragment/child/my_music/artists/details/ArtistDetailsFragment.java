@@ -16,8 +16,12 @@ import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
+import com.imusic.fragment.child.playlist.details.PlaylistDetailViewModel;
 import com.imusic.models.Artist;
+import com.imusic.models.Playlist;
+import com.imusic.models.PlaylistSong;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,8 @@ public class ArtistDetailsFragment extends BaseFragment {
     private ArtistDetailViewModel mViewModel;
     private SongViewModel mSongViewModel;
     private ArrayList<Long> mListSongByArtistId;
+    private PlaylistDetailViewModel mPlaylistDetailViewModel;
+    private Playlist mPlaylist;
 
     public static ArtistDetailsFragment getInstance(Artist artist) {
         ArtistDetailsFragment fragment = new ArtistDetailsFragment();
@@ -56,12 +62,36 @@ public class ArtistDetailsFragment extends BaseFragment {
         mTvTitleArtist = mView.findViewById(R.id.tv_name_artists);
         mListSongArtist = mView.findViewById(R.id.rc_artist_detail);
         mListSongArtist.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new ArtistDetailAdapter(mListSongs, new ArtistDetailAdapter.IOnItemClickListener() {
+
+        mPlaylistDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
+        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
+        mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
+
+        mAdapter = new ArtistDetailAdapter(mListSongs, isAdd, new ArtistDetailAdapter.IOnItemClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onItemClick(Song song) {
                 Toast.makeText(mContext, "Play music", Toast.LENGTH_SHORT).show();
                 Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
+            }
+
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            public void onAddItem(Song song) {
+                if (isAdd) {
+                    final long idSong = song.getId();
+                    final long idPlaylist = mPlaylist.getId();
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            PlaylistSong playlistSong = new PlaylistSong();
+                            playlistSong.setSongId(idSong);
+                            playlistSong.setPlaylistId(idPlaylist);
+                            mPlaylistDetailViewModel.insert(playlistSong);
+                            return null;
+                        }
+                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
         });
         mListSongArtist.setAdapter(mAdapter);

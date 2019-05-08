@@ -44,7 +44,7 @@ public class PlaylistFragment extends BaseFragment {
             @Override
             public void onDeleteItem(Playlist playlist) {
                 mViewModel.deletePlaylist(playlist);
-                Toast.makeText(mContext, "Delete playlist successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.tv_delete_playlist_successfully), Toast.LENGTH_SHORT).show();
             }
         });
         mRcPlaylist.setLayoutManager(new LinearLayoutManager(mContext));
@@ -76,7 +76,7 @@ public class PlaylistFragment extends BaseFragment {
                 AddEditPlaylistDialog dialog = new AddEditPlaylistDialog(mContext, null, new AddEditPlaylistDialog.IOnSubmitListener() {
                     @Override
                     public void submit(String name) {
-                        Toast.makeText(mContext, mContext.getString(R.string.tv_create_playlist_success), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, mContext.getString(R.string.tv_create_playlist_success), Toast.LENGTH_SHORT).show();
                         Playlist playlist = new Playlist(name);
                         playlist.setFromUsers(1);
                         mViewModel.insert(playlist);

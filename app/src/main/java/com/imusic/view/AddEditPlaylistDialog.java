@@ -27,6 +27,7 @@ public class AddEditPlaylistDialog extends Dialog {
 
     public AddEditPlaylistDialog(Context context, Playlist playlist, IOnSubmitListener iOnSubmitListener) {
         super(context);
+        mContext = context;
         mPlaylist = playlist;
         mListener = iOnSubmitListener;
     }
@@ -52,21 +53,21 @@ public class AddEditPlaylistDialog extends Dialog {
         mEditText = findViewById(R.id.edtPlayListName);
         mTvTitle = findViewById(R.id.tvTitle);
         if (mPlaylist != null) {
-            mTvTitle.setText("Edit Playlist");
+            mTvTitle.setText(R.string.tv_edit_playlist);
             mEditText.setText(mPlaylist.getTitle());
             mEditText.setSelection(mEditText.getText().length());
         } else {
-            mTvTitle.setText("Create Playlist");
+            mTvTitle.setText(R.string.tv_create_playlist);
         }
         mBtnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mEditText.getText().toString().isEmpty()) {
-                    Toast.makeText(mContext, "Please enter playlist name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.tv_please_enter_playlist_name), Toast.LENGTH_SHORT).show();
                 } else {
+                    dismiss();
                     mListener.submit(mEditText.getText().toString());
                 }
-                dismiss();
             }
         });
     }

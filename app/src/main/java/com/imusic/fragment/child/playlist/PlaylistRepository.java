@@ -47,7 +47,7 @@ public class PlaylistRepository {
         }
     }
 
-    void uppdatePlaylist(Playlist playlist) {
+    void updatePlaylist(Playlist playlist) {
         new updatePlaylistAysnc(mPlaylistDao).execute(playlist);
     }
 
