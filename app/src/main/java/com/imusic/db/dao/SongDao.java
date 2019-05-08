@@ -26,9 +26,6 @@ public abstract class SongDao {
     @Query("SELECT * FROM song_table WHERE title LIKE :keyword")
     public abstract List<Song> searchSong(String keyword);
 
-    @Query("SELECT * FROM song_table WHERE artist_id=:artist_id ORDER BY title ASC")
-    public abstract LiveData<List<Song>> getSongByArtistIdLiveData(long artist_id);
-
     @Query("SELECT id FROM song_table WHERE title =:title")
     public abstract List<Long> getIdSong(String title);
 

@@ -25,12 +25,6 @@ public class Song implements Serializable {
     @ColumnInfo(name = "artist")
     private String artist;
 
-    @ColumnInfo(name = "artist_id")
-    private long artist_id = 0;
-
-    @ColumnInfo(name = "artist_name")
-    private String artist_name;
-
     @Ignore
     public Song(long id, String title, String artist) {
         this.id = id;
@@ -47,13 +41,6 @@ public class Song implements Serializable {
     @Ignore
     public Song(String title) {
         this.title = title;
-    }
-
-    @Ignore
-    public Song(String title, String artist_name, long artist_id) {
-        this.title = title;
-        this.artist_name = artist_name;
-        this.artist_id = artist_id;
     }
 
     public Song() {
@@ -97,21 +84,5 @@ public class Song implements Serializable {
 
     public void setArtist(String artist) {
         this.artist = artist;
-    }
-
-    public long getArtist_id() {
-        return artist_id;
-    }
-
-    public void setArtist_id(long artist_id) {
-        this.artist_id = artist_id;
-    }
-
-    public String getArtist_name() {
-        return artist_name;
-    }
-
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
     }
 }
