@@ -21,7 +21,7 @@ public class PlaylistDetailViewModel extends AndroidViewModel {
         return mRepository.insert(playlistSong);
     }
 
-    LiveData<List<Long>> getIdSongByIdPlaylist(long playlistId) {
+    LiveData<List<PlaylistSong>> getIdSongByIdPlaylist(long playlistId) {
         return mRepository.getIdSongByIdPlaylist(playlistId);
     }
 

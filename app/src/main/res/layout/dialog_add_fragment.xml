@@ -33,6 +33,7 @@
             android:hint="@string/tv_playlist_name"
             android:inputType="textMultiLine"
             android:paddingBottom="5dp"
+            android:singleLine="true"
             android:textColor="#fff"
             android:textColorHint="#a4a4a4"
             android:textSize="@dimen/text_size_15"

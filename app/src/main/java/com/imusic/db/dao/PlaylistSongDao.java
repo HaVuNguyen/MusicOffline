@@ -15,9 +15,9 @@ public abstract class PlaylistSongDao {
     @Insert
     public abstract long insert(PlaylistSong playlistSong);
 
-    @Query("SELECT id_song FROM playlist_song_table WHERE id_playlist=:playlistId")
-    public abstract LiveData<List<Long>> getSongByPlaylistId(long playlistId);
+    @Query("SELECT * FROM playlist_song_table WHERE id_playlist=:playlistId")
+    public abstract LiveData<List<PlaylistSong>> getSongByPlaylistId(long playlistId);
 
-    @Query("DELETE FROM playlist_song_table WHERE id_song=:idSong")
+    @Query("DELETE FROM playlist_song_table WHERE id=:idSong")
     public abstract void deleteSongById(long idSong);
 }

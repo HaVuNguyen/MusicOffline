@@ -23,7 +23,7 @@ public class PlaylistDetailRepository {
         return mDao.insert(playlistSong);
     }
 
-    LiveData<List<Long>> getIdSongByIdPlaylist(long playlistId) {
+    LiveData<List<PlaylistSong>> getIdSongByIdPlaylist(long playlistId) {
         return mDao.getSongByPlaylistId(playlistId);
     }
 

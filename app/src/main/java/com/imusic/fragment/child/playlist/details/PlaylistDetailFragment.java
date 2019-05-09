@@ -21,6 +21,7 @@ import com.imusic.fragment.child.playlist.PlaylistViewModel;
 import com.imusic.fragment.child.playlist.addSong.AddSongToPlaylistActivity;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Playlist;
+import com.imusic.models.PlaylistSong;
 import com.imusic.models.Song;
 import com.imusic.ultils.Constant;
 import com.imusic.view.AddEditPlaylistDialog;
@@ -39,7 +40,7 @@ public class PlaylistDetailFragment extends BaseFragment {
     private RecyclerView mRcSong;
     private PlaylistDetailAdapter mAdapter;
     private PlaylistDetailViewModel mViewModel;
-    private ArrayList<Long> mListIdSong;
+    private ArrayList<PlaylistSong> mListIdSong;
     private SongViewModel mSongViewModel;
     private PlaylistViewModel mPlaylistViewModel;
 
@@ -74,8 +75,8 @@ public class PlaylistDetailFragment extends BaseFragment {
 
             @Override
             public void onDeleteItem(Song song) {
-                mViewModel.deleteSongById(song.getId());
-                Toast.makeText(mContext, "Delete playlist successfully", Toast.LENGTH_SHORT).show();
+                /*phải xóa theo id trong bảng trung gian vì id này chỉ xuất hiện 1 lần*/
+                mViewModel.deleteSongById(song.getPlaylistSongId());
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -83,28 +84,31 @@ public class PlaylistDetailFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
         mSongViewModel = ViewModelProviders.of(this).get(SongViewModel.class);
         mPlaylistViewModel = ViewModelProviders.of(this).get(PlaylistViewModel.class);
-        mViewModel.getIdSongByIdPlaylist(mPlaylist.getId()).observe(this, new Observer<List<Long>>() {
+        mViewModel.getIdSongByIdPlaylist(mPlaylist.getId()).observe(this, new Observer<List<PlaylistSong>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
-            public void onChanged(@Nullable List<Long> longs) {
+            public void onChanged(@Nullable List<PlaylistSong> longs) {
                 if (longs != null) {
                     mListIdSong = new ArrayList<>(longs);
                     mListSong.clear();
-                    new AsyncTask<Long, Void, List<Long>>() {
+                    new AsyncTask<PlaylistSong, Void, List<PlaylistSong>>() {
                         @Override
-                        protected List<Long> doInBackground(Long... longs) {
-                            for (Long id : mListIdSong) {
-                                List<Song> listSongById = mSongViewModel.getSongById(id);
+                        protected List<PlaylistSong> doInBackground(PlaylistSong... longs) {
+                            for (PlaylistSong iteam : mListIdSong) {
+                                List<Song> listSongById = mSongViewModel.getSongById(iteam.getSongId());
                                 if (listSongById.size() > 0) {
-                                    mListSong.add(listSongById.get(0));
+                                    /*có id song -> lưu vào table song -> id song playlist*/
+                                    Song idSongPlaylist = listSongById.get(0);
+                                    idSongPlaylist.setPlaylistSongId(iteam.getId());
+                                    mListSong.add(idSongPlaylist);
                                 }
                             }
                             return null;
                         }
 
                         @Override
-                        protected void onPostExecute(List<Long> longs) {
-                            super.onPostExecute(longs);
+                        protected void onPostExecute(List<PlaylistSong> playlistSongs) {
+                            super.onPostExecute(playlistSongs);
                             mAdapter.notifyDataSetChanged();
                             if (mListSong.size() == 0) {
                                 mTvNoData.setVisibility(View.VISIBLE);
@@ -151,7 +155,6 @@ public class PlaylistDetailFragment extends BaseFragment {
                             mPlaylistViewModel.updatePlaylist(mPlaylist);
                             mTvNamePlaylist.setText(mPlaylist.getTitle());
                             mAdapter.notifyDataSetChanged();
-//                            Toast.makeText(mContext, mContext.getString(R.string.tv_edit_name_playlist_successfully), Toast.LENGTH_SHORT).show();
                         }
                     });
                     dialog.show();

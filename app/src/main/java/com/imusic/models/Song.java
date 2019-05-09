@@ -26,6 +26,12 @@ public class Song implements Serializable {
     private String artist;
 
     @Ignore
+    private boolean isAdded = false;
+
+    @Ignore
+    private long playlistSongId;
+
+    @Ignore
     public Song(long id, String title, String artist) {
         this.id = id;
         this.title = title;
@@ -84,5 +90,21 @@ public class Song implements Serializable {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public boolean isAdded() {
+        return isAdded;
+    }
+
+    public void setAdded(boolean added) {
+        isAdded = added;
+    }
+
+    public long getPlaylistSongId() {
+        return playlistSongId;
+    }
+
+    public void setPlaylistSongId(long playlistSongId) {
+        this.playlistSongId = playlistSongId;
     }
 }

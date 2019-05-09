@@ -24,7 +24,7 @@ import java.util.Collections;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder>
         implements ItemTouchHelperAdapter {
-    private ArrayList<Song> mSongs = null;
+    private ArrayList<Song> mSongs;
     private View.OnClickListener mOnClickListener;
     private IOnClickSongListener mListener;
     private final OnStartDragListener mDragStartListener;
@@ -72,14 +72,27 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             });
         } else {
             holder.mImvMenu.setImageResource(R.drawable.bg_add);
+
+            if (song.isAdded()) {
+                holder.mImvMenu.setSelected(true);
+            } else {
+                holder.mImvMenu.setSelected(false);
+            }
+
             holder.mImvMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mOnAddClickListener.onAddItem(song);
-                    holder.mImvMenu.setSelected(true);
+                    song.setAdded(true);
+
+//                    if (!song.isAdded()){
+//                        song.setAdded(true);
+//                    }else {
+//                        song.setAdded(false);
+//                    }
+                    notifyDataSetChanged();
                 }
             });
-            holder.mImvMenu.setSelected(false);
         }
     }
 

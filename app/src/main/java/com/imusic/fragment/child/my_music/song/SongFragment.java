@@ -71,13 +71,13 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mArtistDetailViewModel = ViewModelProviders.of(this).get(ArtistDetailViewModel.class);
         mDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
 
-        final boolean intent = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG,false);
+        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG,false);
         mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
-        mSongAdapter = new SongAdapter(mSongs, intent, this, new SongAdapter.IOnAddClickListener() {
+        mSongAdapter = new SongAdapter(mSongs, isAdd, this, new SongAdapter.IOnAddClickListener() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onAddItem(Song song) {
-                if (intent){
+                if (isAdd){
                     final long idSong = song.getId();
                     final long idPlaylist = mPlaylist.getId();
                     new AsyncTask<Void, Void, Void>() {
