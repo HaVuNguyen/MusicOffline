@@ -25,7 +25,6 @@ import java.util.Collections;
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder>
         implements ItemTouchHelperAdapter {
     private ArrayList<Song> mSongs;
-    private View.OnClickListener mOnClickListener;
     private IOnClickSongListener mListener;
     private final OnStartDragListener mDragStartListener;
     private IOnAddClickListener mOnAddClickListener;
@@ -46,7 +45,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     @Override
     public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_song, viewGroup, false);
-        view.setOnClickListener(mOnClickListener);
         return new SongViewHolder(view);
     }
 
@@ -155,9 +153,5 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     interface IOnAddClickListener {
         void onAddItem(Song song);
-    }
-
-    public Song getSongAtPosition(int position) {
-        return mSongs.get(position);
     }
 }

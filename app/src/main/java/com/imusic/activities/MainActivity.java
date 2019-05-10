@@ -2,12 +2,17 @@ package com.imusic.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,14 +21,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.imusic.R;
+import com.imusic.SongService;
 import com.imusic.fragment.group.GroupFavoriteFragment;
 import com.imusic.fragment.group.GroupMyMusicFragment;
 import com.imusic.fragment.group.GroupPlaylistFragment;
 import com.imusic.fragment.group.GroupRecentlyFragment;
 import com.imusic.menu.MenuAdapter;
 import com.imusic.menu.MenuModel;
+import com.imusic.models.Song;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +44,29 @@ public class MainActivity extends BaseActivity {
     private MenuAdapter mMenuAdapter;
     private List<MenuModel> mMenuLists = new ArrayList<>();
     private static final int REQUEST_PERMISSIONS = 100;
+
+    public SongService mService;
+    private Intent playIntent;
+    private ArrayList<Song> mSongs;
+    private TextView mTvNameSong;
+    private TextView mTvNameSing;
+    private ImageView mImvNext, mImvPlay, mImvPre, mImvSong;
+    private ConstraintLayout mLayoutMiniPlayer;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            SongService.SongBinder binder = (SongService.SongBinder) service;
+            mService = binder.getService();
+            mService.setSongs(mSongs);
+            showMiniPlayer(mService.getSongs()!=null && mService.getSongs().size()>0);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -173,7 +205,38 @@ public class MainActivity extends BaseActivity {
         this.mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         loadMenu();
         replaceFragment(new GroupMyMusicFragment());
+        mSongs = new ArrayList<>();
+        mTvNameSong = findViewById(R.id.tv_name_song_playing_main);
+        mTvNameSing = findViewById(R.id.tv_name_singer_playing_main);
+        mImvSong = findViewById(R.id.imv_song_playing_main);
+        mImvNext = findViewById(R.id.btn_next_playing_main);
+        mImvPlay = findViewById(R.id.btn_play_playing_main);
+        mImvPre = findViewById(R.id.btn_pre_playing_main);
+        mLayoutMiniPlayer = findViewById(R.id.view_player);
+        mLayoutMiniPlayer.setVisibility(View.GONE);
+        mService = new SongService();
     }
+
+    public void showMiniPlayer(boolean isShow) {
+        if (isShow) {
+            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+            mImvSong.setImageResource(R.drawable.ic_headphones);
+        } else {
+            mLayoutMiniPlayer.setVisibility(View.INVISIBLE);
+        }
+        if (mService.isPlaying() || isShow) {
+            mImvPlay.setImageResource(R.drawable.ic_btn_play);
+        } else {
+            mImvPlay.setImageResource(R.drawable.ic_btn_pause);
+        }
+    }
+//
+//    private void updateMiniPlayer(Song song) {
+//        mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+//        mImvSong.setImageResource(R.drawable.ic_headphones);
+//        mTvNameSong.setText(song.getTitle());
+//        mTvNameSing.setText(song.getArtist());
+//    }
 
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= 23 &&
@@ -196,7 +259,53 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void addListener() {
+        mImvPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaying()) {
+                    mImvPlay.setImageResource(R.drawable.ic_btn_play);
+                    mService.pauseSong();
+                } else {
+                    mImvPlay.setImageResource(R.drawable.ic_btn_pause);
+                    mService.playSong();
+                }
+            }
+        });
 
+        mImvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mService.nextSong();
+            }
+        });
+
+        mImvPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mService.previousSong();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (playIntent == null) {
+            playIntent = new Intent(this, SongService.class);
+            bindService(playIntent, mConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        mService = null;
+        super.onDestroy();
+    }
+
+    boolean isPlaying() {
+        return mService.isPlaying();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

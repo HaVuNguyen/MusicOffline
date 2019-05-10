@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import com.imusic.R;
 import com.imusic.SharedPreferenceHelper;
+import com.imusic.SongService;
+import com.imusic.activities.MainActivity;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.albums.AlbumViewModel;
@@ -53,6 +56,8 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     private ItemTouchHelper mItemTouchHelper;
     private PlaylistDetailViewModel mDetailViewModel;
     private Playlist mPlaylist;
+    private RecyclerView mListMusic;
+    private SongService mService;
 
     @Override
     protected int initLayout() {
@@ -71,13 +76,13 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mArtistDetailViewModel = ViewModelProviders.of(this).get(ArtistDetailViewModel.class);
         mDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
 
-        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG,false);
+        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
         mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
         mSongAdapter = new SongAdapter(mSongs, isAdd, this, new SongAdapter.IOnAddClickListener() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onAddItem(Song song) {
-                if (isAdd){
+                if (isAdd) {
                     final long idSong = song.getId();
                     final long idPlaylist = mPlaylist.getId();
                     new AsyncTask<Void, Void, Void>() {
@@ -93,16 +98,18 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                 }
             }
         });
-        RecyclerView listMusic = mView.findViewById(R.id.list_music);
-        listMusic.setLayoutManager(new LinearLayoutManager(getContext()));
-        listMusic.setAdapter(mSongAdapter);
+        mListMusic = mView.findViewById(R.id.list_music);
+        mListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
+        mListMusic.setAdapter(mSongAdapter);
         mSongAdapter.setOnClickListener(this);
         getSongList();
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(listMusic);
+        mItemTouchHelper.attachToRecyclerView(mListMusic);
 
+        mService = ((MainActivity) getActivity()).mService;
+        mService.setSongs(mSongs);
     }
 
     @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})
@@ -118,13 +125,16 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                     if (songCursor != null && songCursor.moveToFirst()) {
                         int titleColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
                         int artistColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+                        int pathColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
                         do {
                             String mNameSong = songCursor.getString(titleColumn);
                             String mSinger = songCursor.getString(artistColumn);
+                            String mPath = songCursor.getString(pathColumn);
 
                             Song song = new Song();
                             song.setTitle(mNameSong);
                             song.setArtist(mSinger);
+                            song.setSongPath(mPath);
                             mSongViewModel.insert(song);
                         } while (songCursor.moveToNext());
                     }
@@ -264,8 +274,10 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     @SuppressLint("NewApi")
     @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
-        Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
-//        getActivity().startService(SongService.getInstance(getContext().getApplicationContext()));
+        Intent intent = new Intent(mContext,PLayerActivity.class);
+        intent.putExtra(Constant.LIST_SONG,mSongs);
+        intent.putExtra(Constant.POSITION_SONG,position);
+        mContext.startActivity(intent);
     }
 
     @Override

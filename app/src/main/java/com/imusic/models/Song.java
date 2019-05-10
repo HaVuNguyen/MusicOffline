@@ -20,7 +20,7 @@ public class Song implements Serializable {
     private int duration = 0;
 
     @ColumnInfo(name = "song_path")
-    private String song_path = null;
+    private String mSongPath = null;
 
     @ColumnInfo(name = "artist")
     private String artist;
@@ -76,12 +76,12 @@ public class Song implements Serializable {
         this.duration = duration;
     }
 
-    public String getSong_path() {
-        return song_path;
+    public String getSongPath() {
+        return mSongPath;
     }
 
-    public void setSong_path(String song_path) {
-        this.song_path = song_path;
+    public void setSongPath(String songPath) {
+        this.mSongPath = songPath;
     }
 
     public String getArtist() {
