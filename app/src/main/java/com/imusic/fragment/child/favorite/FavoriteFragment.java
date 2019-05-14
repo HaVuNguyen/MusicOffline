@@ -3,6 +3,7 @@ package com.imusic.fragment.child.favorite;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.imusic.fragment.child.favorite.add_song.AddSongToFavoriteFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +48,11 @@ public class FavoriteFragment extends BaseFragment {
         mAdapter = new FavoriteAdapter(mSongs, new FavoriteAdapter.IOnClickListener() {
             @SuppressLint("NewApi")
             @Override
-            public void onItemClick(Song song) {
-                Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
+            public void onItemClick(Song song,int position) {
+                Intent intent = new Intent(mContext,PLayerActivity.class);
+                intent.putExtra(Constant.LIST_SONG,mSongs);
+                intent.putExtra(Constant.POSITION_SONG,position);
+                mContext.startActivity(intent);
             }
 
             @Override

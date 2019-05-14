@@ -61,14 +61,14 @@ public class PlaylistDetailAdapter extends RecyclerView.Adapter<PlaylistDetailAd
                 @Override
                 public void onClick(View v) {
                     Song song = mSongs.get(getAdapterPosition());
-                    mListener.onItemClick(song);
+                    mListener.onItemClick(song,getLayoutPosition());
                 }
             });
         }
     }
 
     interface IOnItemClickListener {
-        void onItemClick(Song song);
+        void onItemClick(Song song,int position);
 
         void onDeleteItem(Song song);
     }

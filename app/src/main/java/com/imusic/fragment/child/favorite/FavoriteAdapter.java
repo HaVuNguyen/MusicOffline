@@ -64,14 +64,14 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
                 @Override
                 public void onClick(View v) {
                     Song song = mSongs.get(getAdapterPosition());
-                    mListener.onItemClick(song);
+                    mListener.onItemClick(song,getLayoutPosition());
                 }
             });
         }
     }
 
     interface IOnClickListener {
-        void onItemClick(Song song);
+        void onItemClick(Song song,int position);
 
         void onDeleteItem(Song song);
     }

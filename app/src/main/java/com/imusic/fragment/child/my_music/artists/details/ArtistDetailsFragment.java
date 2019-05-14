@@ -3,6 +3,7 @@ package com.imusic.fragment.child.my_music.artists.details;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,9 +71,12 @@ public class ArtistDetailsFragment extends BaseFragment {
         mAdapter = new ArtistDetailAdapter(mListSongs, isAdd, new ArtistDetailAdapter.IOnItemClickListener() {
             @SuppressLint("NewApi")
             @Override
-            public void onItemClick(Song song) {
+            public void onItemClick(Song song,int position) {
                 Toast.makeText(mContext, "Play music", Toast.LENGTH_SHORT).show();
-                Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
+                Intent intent = new Intent(mContext,PLayerActivity.class);
+                intent.putExtra(Constant.LIST_SONG,mListSongs);
+                intent.putExtra(Constant.POSITION_SONG,position);
+                mContext.startActivity(intent);
             }
 
             @SuppressLint("StaticFieldLeak")

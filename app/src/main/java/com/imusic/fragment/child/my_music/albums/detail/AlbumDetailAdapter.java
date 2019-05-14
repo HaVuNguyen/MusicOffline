@@ -70,14 +70,14 @@ public class AlbumDetailAdapter extends RecyclerView.Adapter<AlbumDetailAdapter.
                 @Override
                 public void onClick(View v) {
                     Song song = mSongs.get(getLayoutPosition());
-                    mListener.onItemClick(song);
+                    mListener.onItemClick(song,getLayoutPosition());
                 }
             });
         }
     }
 
     interface IOnItemClickListener {
-        void onItemClick(Song song);
+        void onItemClick(Song song,int position);
 
         void onAddItem(Song song);
     }

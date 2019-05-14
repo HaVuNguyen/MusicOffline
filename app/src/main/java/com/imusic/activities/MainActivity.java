@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
             SongService.SongBinder binder = (SongService.SongBinder) service;
             mService = binder.getService();
             mService.setSongs(mSongs);
-            showMiniPlayer(mService.getSongs()!=null && mService.getSongs().size()>0);
+//            showMiniPlayer(mService.getSongs()!=null && mService.getSongs().size()>0);
         }
 
         @Override
@@ -216,20 +216,20 @@ public class MainActivity extends BaseActivity {
         mLayoutMiniPlayer.setVisibility(View.GONE);
         mService = new SongService();
     }
-
-    public void showMiniPlayer(boolean isShow) {
-        if (isShow) {
-            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
-            mImvSong.setImageResource(R.drawable.ic_headphones);
-        } else {
-            mLayoutMiniPlayer.setVisibility(View.INVISIBLE);
-        }
-        if (mService.isPlaying() || isShow) {
-            mImvPlay.setImageResource(R.drawable.ic_btn_play);
-        } else {
-            mImvPlay.setImageResource(R.drawable.ic_btn_pause);
-        }
-    }
+//
+//    public void showMiniPlayer(boolean isShow) {
+//        if (isShow) {
+//            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+//            mImvSong.setImageResource(R.drawable.ic_headphones);
+//        } else {
+//            mLayoutMiniPlayer.setVisibility(View.INVISIBLE);
+//        }
+//        if (mService.isPlaying() || isShow) {
+//            mImvPlay.setImageResource(R.drawable.ic_btn_play);
+//        } else {
+//            mImvPlay.setImageResource(R.drawable.ic_btn_pause);
+//        }
+//    }
 //
 //    private void updateMiniPlayer(Song song) {
 //        mLayoutMiniPlayer.setVisibility(View.VISIBLE);

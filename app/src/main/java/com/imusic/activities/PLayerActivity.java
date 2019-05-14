@@ -2,7 +2,6 @@ package com.imusic.activities;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -35,11 +34,6 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
     private static final String TIME_DEFAULT = "00:00";
     private ArrayList<Song> mSongs;
     private int mPosition;
-
-    public static Intent getInstance(Context context) {
-        Intent intent = new Intent(context, PLayerActivity.class);
-        return intent;
-    }
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override

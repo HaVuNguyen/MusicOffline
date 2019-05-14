@@ -69,8 +69,11 @@ public class PlaylistDetailFragment extends BaseFragment {
         mRcSong.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new PlaylistDetailAdapter(mListSong, new PlaylistDetailAdapter.IOnItemClickListener() {
             @Override
-            public void onItemClick(Song song) {
-                Objects.requireNonNull(getActivity()).startActivity(PLayerActivity.getInstance(getActivity()));
+            public void onItemClick(Song song,int position) {
+                Intent intent = new Intent(mContext,PLayerActivity.class);
+                intent.putExtra(Constant.LIST_SONG,mListSong);
+                intent.putExtra(Constant.POSITION_SONG,position);
+                mContext.startActivity(intent);
             }
 
             @Override

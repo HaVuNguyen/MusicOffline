@@ -107,9 +107,6 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mListMusic);
-
-        mService = ((MainActivity) getActivity()).mService;
-        mService.setSongs(mSongs);
     }
 
     @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})

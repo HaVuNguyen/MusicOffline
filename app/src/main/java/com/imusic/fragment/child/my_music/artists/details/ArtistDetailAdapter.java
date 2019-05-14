@@ -71,14 +71,14 @@ public class ArtistDetailAdapter extends RecyclerView.Adapter<ArtistDetailAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.onItemClick(mSongs.get(getLayoutPosition()));
+                    mListener.onItemClick(mSongs.get(getLayoutPosition()),getLayoutPosition());
                 }
             });
         }
     }
 
     interface IOnItemClickListener {
-        void onItemClick(Song song);
+        void onItemClick(Song song,int position);
 
         void onAddItem(Song song);
     }
