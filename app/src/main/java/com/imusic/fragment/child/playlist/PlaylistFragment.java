@@ -63,6 +63,7 @@ public class PlaylistFragment extends BaseFragment {
 
     @Override
     protected void addListener() {
+        setTitle(getString(R.string.tv_playlist));
         showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +77,6 @@ public class PlaylistFragment extends BaseFragment {
                 AddEditPlaylistDialog dialog = new AddEditPlaylistDialog(mContext, null, new AddEditPlaylistDialog.IOnSubmitListener() {
                     @Override
                     public void submit(String name) {
-//                        Toast.makeText(mContext, mContext.getString(R.string.tv_create_playlist_success), Toast.LENGTH_SHORT).show();
                         Playlist playlist = new Playlist(name);
                         playlist.setFromUsers(1);
                         mViewModel.insert(playlist);

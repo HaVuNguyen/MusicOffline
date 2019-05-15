@@ -41,7 +41,7 @@ class FavoriteRepository {
         }
     }
 
-    LiveData<List<Long>> getIdSong() {
+    LiveData<List<Favorite>> getIdSong() {
         return mFavoriteDao.getIdSong();
     }
 }

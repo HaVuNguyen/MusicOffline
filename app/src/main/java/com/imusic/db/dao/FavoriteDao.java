@@ -14,9 +14,9 @@ public abstract class FavoriteDao {
     @Insert
     public abstract long insert(Favorite favorite);
 
-    @Query("DELETE FROM favorite_table WHERE id_song=:idSong")
+    @Query("DELETE FROM favorite_table WHERE id=:idSong")
     public abstract void deleteSong(long idSong);
 
-    @Query("SELECT id_song FROM favorite_table")
-    public abstract LiveData<List<Long>> getIdSong();
+    @Query("SELECT * FROM favorite_table")
+    public abstract LiveData<List<Favorite>> getIdSong();
 }

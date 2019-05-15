@@ -72,7 +72,6 @@ public class ArtistDetailsFragment extends BaseFragment {
             @SuppressLint("NewApi")
             @Override
             public void onItemClick(Song song,int position) {
-                Toast.makeText(mContext, "Play music", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext,PLayerActivity.class);
                 intent.putExtra(Constant.LIST_SONG,mListSongs);
                 intent.putExtra(Constant.POSITION_SONG,position);

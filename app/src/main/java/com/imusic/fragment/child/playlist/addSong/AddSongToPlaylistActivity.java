@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 import com.imusic.R;
 import com.imusic.activities.BaseActivity;
-import com.imusic.fragment.child.favorite.add_song.AddSongToFavoriteFragment;
 import com.imusic.fragment.group.GroupMyMusicFragment;
 import com.imusic.ultils.Constant;
 
@@ -42,8 +41,6 @@ public class AddSongToPlaylistActivity extends BaseActivity {
         boolean intent = getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
         if (intent) {
             replaceFragment(new GroupMyMusicFragment());
-        } else {
-            replaceFragment(new AddSongToFavoriteFragment());
         }
     }
 

@@ -16,12 +16,12 @@ import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.favorite.add_song.AddSongToFavoriteFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
 import com.imusic.fragment.group.BaseGroupFragment;
+import com.imusic.models.Favorite;
 import com.imusic.models.Song;
 import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class FavoriteFragment extends BaseFragment {
 
@@ -30,7 +30,7 @@ public class FavoriteFragment extends BaseFragment {
     private FavoriteViewModel mViewModel;
     private SongViewModel mSongViewModel;
     private FavoriteAdapter mAdapter;
-    private ArrayList<Long> mListIdSong;
+    private ArrayList<Favorite> mListIdSong;
 
     @Override
     protected int initLayout() {
@@ -48,34 +48,36 @@ public class FavoriteFragment extends BaseFragment {
         mAdapter = new FavoriteAdapter(mSongs, new FavoriteAdapter.IOnClickListener() {
             @SuppressLint("NewApi")
             @Override
-            public void onItemClick(Song song,int position) {
-                Intent intent = new Intent(mContext,PLayerActivity.class);
-                intent.putExtra(Constant.LIST_SONG,mSongs);
-                intent.putExtra(Constant.POSITION_SONG,position);
+            public void onItemClick(Song song, int position) {
+                Intent intent = new Intent(mContext, PLayerActivity.class);
+                intent.putExtra(Constant.LIST_SONG, mSongs);
+                intent.putExtra(Constant.POSITION_SONG, position);
                 mContext.startActivity(intent);
             }
 
             @Override
             public void onDeleteItem(Song song) {
-                mViewModel.deleteSongById(song.getId());
+                mViewModel.deleteSongById(song.getFavoriteSongId());
                 mAdapter.notifyDataSetChanged();
             }
         });
         mRcListSong.setAdapter(mAdapter);
-        mViewModel.getIdSong().observe(this, new Observer<List<Long>>() {
+        mViewModel.getIdSong().observe(this, new Observer<List<Favorite>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
-            public void onChanged(@Nullable List<Long> longs) {
+            public void onChanged(@Nullable List<Favorite> longs) {
                 if (longs != null) {
                     mListIdSong = new ArrayList<>(longs);
                     mSongs.clear();
                     new AsyncTask<Long, Void, List<Long>>() {
                         @Override
                         protected List<Long> doInBackground(Long... longs) {
-                            for (long id : mListIdSong) {
-                                List<Song> listSong = mSongViewModel.getSongById(id);
+                            for (Favorite item : mListIdSong) {
+                                List<Song> listSong = mSongViewModel.getSongById(item.getIdSong());
                                 if (listSong.size() > 0) {
-                                    mSongs.add(listSong.get(0));
+                                    Song idSongFavorite = listSong.get(0);
+                                    idSongFavorite.setFavoriteSongId(item.getId());
+                                    mSongs.add(idSongFavorite);
                                 }
                             }
                             return null;
@@ -95,6 +97,8 @@ public class FavoriteFragment extends BaseFragment {
 
     @Override
     protected void addListener() {
+        hiddenNavRight();
+        setTitle(getString(R.string.tv_favorite));
         showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

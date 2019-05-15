@@ -25,7 +25,7 @@ public class FavoriteViewModel extends AndroidViewModel {
         mRepository.deleteSongById(idSong);
     }
 
-    LiveData<List<Long>> getIdSong() {
+    LiveData<List<Favorite>> getIdSong() {
         return mRepository.getIdSong();
     }
 }
