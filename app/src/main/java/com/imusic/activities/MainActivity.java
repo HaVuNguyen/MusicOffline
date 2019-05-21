@@ -33,6 +33,7 @@ import com.imusic.fragment.group.GroupRecentlyFragment;
 import com.imusic.menu.MenuAdapter;
 import com.imusic.menu.MenuModel;
 import com.imusic.models.Song;
+import com.imusic.ultils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,14 +53,19 @@ public class MainActivity extends BaseActivity {
     private TextView mTvNameSing;
     private ImageView mImvNext, mImvPlay, mImvPre, mImvSong;
     private ConstraintLayout mLayoutMiniPlayer;
+    private int mPosition;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SongService.SongBinder binder = (SongService.SongBinder) service;
             mService = binder.getService();
-            mService.setSongs(mSongs);
-//            showMiniPlayer(mService.getSongs()!=null && mService.getSongs().size()>0);
+//            mService.setSongs(mSongs);
+//            mService.setPositionSong(mPosition);
+//            mService.playSong();
+//            if (mSongs != null && mSongs.size() > 0) {
+//                updateMiniPlayer(mSongs.get(mPosition));
+//            }
         }
 
         @Override
@@ -76,7 +82,7 @@ public class MainActivity extends BaseActivity {
         private GroupPlaylistFragment mGroupPlaylistFragment;
         private GroupFavoriteFragment mGroupFavoriteFragment;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
             mGroupMyMusicFragment = new GroupMyMusicFragment();
             mGroupPlaylistFragment = new GroupPlaylistFragment();
@@ -205,7 +211,6 @@ public class MainActivity extends BaseActivity {
         this.mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         loadMenu();
         replaceFragment(new GroupMyMusicFragment());
-        mSongs = new ArrayList<>();
         mTvNameSong = findViewById(R.id.tv_name_song_playing_main);
         mTvNameSing = findViewById(R.id.tv_name_singer_playing_main);
         mImvSong = findViewById(R.id.imv_song_playing_main);
@@ -215,8 +220,11 @@ public class MainActivity extends BaseActivity {
         mLayoutMiniPlayer = findViewById(R.id.view_player);
         mLayoutMiniPlayer.setVisibility(View.GONE);
         mService = new SongService();
+
+//        mSongs = (ArrayList<Song>) getIntent().getSerializableExtra(Constant.LIST_SONG);
+//        mPosition = (int) getIntent().getSerializableExtra(Constant.POSITION_SONG);
     }
-//
+
 //    public void showMiniPlayer(boolean isShow) {
 //        if (isShow) {
 //            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
@@ -231,12 +239,20 @@ public class MainActivity extends BaseActivity {
 //        }
 //    }
 //
-//    private void updateMiniPlayer(Song song) {
-//        mLayoutMiniPlayer.setVisibility(View.VISIBLE);
-//        mImvSong.setImageResource(R.drawable.ic_headphones);
-//        mTvNameSong.setText(song.getTitle());
-//        mTvNameSing.setText(song.getArtist());
-//    }
+
+    private void updateMiniPlayer(Song song) {
+        mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+        if (song != null) {
+            mImvSong.setImageResource(R.drawable.ic_headphones);
+            mTvNameSong.setText(song.getTitle());
+            mTvNameSing.setText(song.getArtist());
+            if (isPlaying()) {
+                mImvPlay.setImageResource(R.drawable.ic_btn_play);
+            } else {
+                mImvPlay.setImageResource(R.drawable.ic_btn_pause);
+            }
+        }
+    }
 
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= 23 &&
@@ -269,6 +285,13 @@ public class MainActivity extends BaseActivity {
                     mImvPlay.setImageResource(R.drawable.ic_btn_pause);
                     mService.playSong();
                 }
+            }
+        });
+        mLayoutMiniPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PLayerActivity.class);
+                startActivity(intent);
             }
         });
 

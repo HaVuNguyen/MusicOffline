@@ -15,7 +15,7 @@ import com.imusic.models.Song;
 
 public class PlayerFragment extends BaseFragment {
 
-//    private ArrayList<Song> mSongs;
+    //    private ArrayList<Song> mSongs;
     private int mPosition = -1;
     public TextView mTvNameSong;
     private ImageView mImvFavorite;
@@ -51,6 +51,7 @@ public class PlayerFragment extends BaseFragment {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View v) {
+                mImvFavorite.setSelected(true);
                 final long idSong = mSong.getId();
                 new AsyncTask<Void, Void, Void>() {
                     @Override
