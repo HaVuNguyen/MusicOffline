@@ -27,11 +27,5 @@ public class RecentlyFragment extends BaseFragment {
                 ((BaseGroupFragment) getParentFragment()).openMenu();
             }
         });
-       showNavRight(R.drawable.ic_add, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "Coming", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

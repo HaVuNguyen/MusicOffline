@@ -1,51 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFF"
-    android:minHeight="100dp">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/view_top"
         layout="@layout/layout_navigation" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imv_player"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/tv_play"
-        android:src="@drawable/bg_player"
-        app:civ_border_color="#000"
-        app:civ_border_width="@dimen/dp_2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_title_playing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:padding="@dimen/dp_2"
-        android:text="@string/tv_play"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_15"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imv_player" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager_player"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/view_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_10"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/view_play"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_title_playing">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_current_duration"
@@ -86,11 +62,10 @@
         android:id="@+id/view_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_seek">
+        android:padding="@dimen/dp_10">
 
         <ImageView
             android:id="@+id/imv_pre"
@@ -119,4 +94,4 @@
             android:contentDescription="@string/tv_next"
             android:src="@drawable/ic_btn_next" />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

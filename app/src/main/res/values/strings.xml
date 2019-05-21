@@ -38,4 +38,5 @@
     <string name="tv_please_enter_playlist_name">Please enter playlist name</string>
     <string name="tv_delete_playlist_successfully">Delete playlist successfully</string>
     <string name="tv_edit_name_playlist_successfully">Edit name playlist successfully</string>
+    <string name="tv_list_song">Danh sách phát</string>
 </resources>

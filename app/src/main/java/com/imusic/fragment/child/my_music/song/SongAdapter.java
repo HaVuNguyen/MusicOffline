@@ -3,6 +3,7 @@ package com.imusic.fragment.child.my_music.song;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,10 +30,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private final OnStartDragListener mDragStartListener;
     private IOnAddClickListener mOnAddClickListener;
     private boolean isAdd = false;
+    private boolean isPlayOrPause = false;
+    private int mPosition = -1;
+    private Song mSong;
 
-    public SongAdapter(ArrayList<Song> songs, boolean TYPE, OnStartDragListener listener, IOnAddClickListener onAddClickListener) {
+    SongAdapter(ArrayList<Song> songs, boolean TYPE_IS_ADD, OnStartDragListener listener, IOnAddClickListener onAddClickListener) {
         this.mSongs = songs;
-        isAdd = TYPE;
+        isAdd = TYPE_IS_ADD;
         mDragStartListener = listener;
         mOnAddClickListener = onAddClickListener;
     }
@@ -43,15 +47,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @NonNull
     @Override
-    public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public SongAdapter.SongViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_song, viewGroup, false);
         return new SongViewHolder(view);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(@NonNull final SongAdapter.SongViewHolder holder, int i) {
-        final Song song = mSongs.get(i);
+    public void onBindViewHolder(@NonNull final SongAdapter.SongViewHolder holder, int position) {
+        final Song song = mSongs.get(position);
         holder.mImvMusic.setImageResource(R.drawable.ic_headphones);
         holder.mTvArtist.setText(song.getArtist());
         holder.mTvTitle.setText(song.getTitle());
@@ -82,7 +86,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 public void onClick(View v) {
                     mOnAddClickListener.onAddItem(song);
                     song.setAdded(true);
-
 //                    if (!song.isAdded()){
 //                        song.setAdded(true);
 //                    }else {
@@ -91,6 +94,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                     notifyDataSetChanged();
                 }
             });
+        }
+        if (position == mPosition) {
+            holder.mTvTitle.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccent));
+            holder.mTvArtist.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorAccent));
+        } else {
+            holder.mTvTitle.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorBlack));
+            holder.mTvArtist.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.colorBlack));
         }
     }
 
@@ -148,6 +158,23 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     void setSongs(ArrayList<Song> songs) {
         mSongs = songs;
+        notifyDataSetChanged();
+    }
+
+    void setListSongPosition(ArrayList<Song> songs, int position) {
+        mSongs = songs;
+        mPosition = position;
+        notifyDataSetChanged();
+    }
+
+    void setPositionSong(Song song, int position) {
+        mSong = song;
+        mPosition = position;
+        notifyDataSetChanged();
+    }
+
+    void setIsPlayOrPause(boolean isPLay) {
+        isPlayOrPause = isPLay;
         notifyDataSetChanged();
     }
 

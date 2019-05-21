@@ -107,13 +107,5 @@ public class FavoriteFragment extends BaseFragment {
                 }
             }
         });
-        showNavRight(R.drawable.ic_add, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getParentFragment() != null) {
-                    ((BaseGroupFragment) getParentFragment()).addFragmentNotReloadContent(new AddSongToFavoriteFragment());
-                }
-            }
-        });
     }
 }

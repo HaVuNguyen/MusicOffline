@@ -7,19 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.imusic.R;
 import com.imusic.SharedPreferenceHelper;
-import com.imusic.SongService;
-import com.imusic.activities.MainActivity;
 import com.imusic.activities.PLayerActivity;
+import com.imusic.callbacks.IOnInitFragmentCallBack;
+import com.imusic.db.SRDatabase;
 import com.imusic.fragment.child.BaseFragment;
 import com.imusic.fragment.child.my_music.albums.AlbumViewModel;
 import com.imusic.fragment.child.my_music.albums.detail.AlbumDetailViewModel;
@@ -56,14 +60,27 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     private ItemTouchHelper mItemTouchHelper;
     private PlaylistDetailViewModel mDetailViewModel;
     private Playlist mPlaylist;
-    private RecyclerView mListMusic;
-    private SongService mService;
+    private EditText mEdSearch;
+    private Handler mHandler;
+    private RecyclerView mRcListSong;
+    private boolean isPlayOrPause = false;
+    private IOnInitFragmentCallBack mCallBack;
+    private Song mSong;
+    private int mPosition;
+
+    public SongFragment(){}
+
+    @SuppressLint("ValidFragment")
+    public SongFragment(IOnInitFragmentCallBack callBack){
+        this.mCallBack = callBack;
+    }
 
     @Override
     protected int initLayout() {
         return R.layout.fragment_song;
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void initComponents() {
         mSongs = new ArrayList<>();
@@ -76,7 +93,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mArtistDetailViewModel = ViewModelProviders.of(this).get(ArtistDetailViewModel.class);
         mDetailViewModel = ViewModelProviders.of(this).get(PlaylistDetailViewModel.class);
 
-        final boolean isAdd = getActivity().getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
+        final boolean isAdd = Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
         mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
         mSongAdapter = new SongAdapter(mSongs, isAdd, this, new SongAdapter.IOnAddClickListener() {
             @SuppressLint("StaticFieldLeak")
@@ -98,15 +115,23 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                 }
             }
         });
-        mListMusic = mView.findViewById(R.id.list_music);
-        mListMusic.setLayoutManager(new LinearLayoutManager(getContext()));
-        mListMusic.setAdapter(mSongAdapter);
+        mRcListSong = mView.findViewById(R.id.list_music);
+        mRcListSong.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRcListSong.setAdapter(mSongAdapter);
         mSongAdapter.setOnClickListener(this);
-        getSongList();
+        mSongAdapter.setSongs(mSongs);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mListMusic);
+        mItemTouchHelper.attachToRecyclerView(mRcListSong);
+        mHandler = new Handler();
+        mEdSearch = mView.findViewById(R.id.ed_search);
+
+        if(mCallBack!=null){
+            mCallBack.onInitFragment(true);
+        }else {
+            getSongList();
+        }
     }
 
     @SuppressLint({"StaticFieldLeak", "NewApi", "Recycle"})
@@ -123,15 +148,18 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
                         int titleColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
                         int artistColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
                         int pathColumn = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
+                        int durationCloumn = songCursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
                         do {
                             String mNameSong = songCursor.getString(titleColumn);
                             String mSinger = songCursor.getString(artistColumn);
                             String mPath = songCursor.getString(pathColumn);
+                            int mDuration = songCursor.getInt(durationCloumn);
 
                             Song song = new Song();
                             song.setTitle(mNameSong);
                             song.setArtist(mSinger);
                             song.setSongPath(mPath);
+                            song.setDuration(mDuration);
                             mSongViewModel.insert(song);
                         } while (songCursor.moveToNext());
                     }
@@ -263,22 +291,90 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    private void searchSong() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                SRDatabase database = SRDatabase.getDatabase(mContext.getApplicationContext());
+                List<Song> listSong = database.mSongDao().searchSong("%" + mEdSearch.getText().toString() + "%");
+                mSongs.clear();
+                for (Song song : listSong) {
+                    mSongs.add(song);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mSongAdapter.notifyDataSetChanged();
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private Runnable mSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            searchSong();
+        }
+    };
+
     @Override
     protected void addListener() {
+        mEdSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler.postDelayed(mSearchRunnable, 700);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onItemClickSong(ArrayList<Song> songs, int position) {
-        Intent intent = new Intent(mContext,PLayerActivity.class);
-        intent.putExtra(Constant.LIST_SONG,mSongs);
-        intent.putExtra(Constant.POSITION_SONG,position);
+        Intent intent = new Intent(mContext, PLayerActivity.class);
+        intent.putExtra(Constant.LIST_SONG, mSongs);
+        intent.putExtra(Constant.POSITION_SONG, position);
         mContext.startActivity(intent);
     }
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    public void setIsPlayOrPause(boolean isPlay) {
+        isPlayOrPause = isPlay;
+        mSongAdapter.setIsPlayOrPause(isPlayOrPause);
+    }
+
+    public void setSongPosition(Song song,int position){
+        mSong = song;
+        mPosition = position;
+        if (mSong!=null && mPosition>=0 && mSongAdapter!=null){
+            mSongAdapter.setPositionSong(mSong,mPosition);
+        }
+    }
+
+    public void setSongs(ArrayList<Song> songs) {
+        mSongs = songs;
+        mSongAdapter.setSongs(mSongs);
+    }
+
+    public void setListSongPosition(ArrayList<Song> songs,int position) {
+        mSongs = songs;
+        mPosition = position;
+        mSongAdapter.setListSongPosition(mSongs,mPosition);
     }
 }
