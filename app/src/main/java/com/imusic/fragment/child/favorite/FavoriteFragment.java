@@ -13,7 +13,6 @@ import android.view.View;
 import com.imusic.R;
 import com.imusic.activities.PLayerActivity;
 import com.imusic.fragment.child.BaseFragment;
-import com.imusic.fragment.child.favorite.add_song.AddSongToFavoriteFragment;
 import com.imusic.fragment.child.my_music.song.SongViewModel;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.models.Favorite;
@@ -107,5 +106,6 @@ public class FavoriteFragment extends BaseFragment {
                 }
             }
         });
+        hiddenTitleNavRight();
     }
 }

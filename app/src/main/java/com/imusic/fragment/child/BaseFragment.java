@@ -24,7 +24,7 @@ public abstract class BaseFragment extends Fragment {
     protected View mLayoutSlideMenu;
     public ImageView mImvNavRight;
     public ImageView mImvNavLeft;
-    private TextView mTvTitle;
+    private TextView mTvTitle,mTvNavRight;
     private ImageView mImvMenu, mImvBack;
 
     protected abstract int initLayout();
@@ -69,6 +69,7 @@ public abstract class BaseFragment extends Fragment {
         mLayoutSlideMenu = getView().findViewById(R.id.layout_left_menu);
 
         mTvTitle = getView().findViewById(R.id.tv_title);
+        mTvNavRight = getView().findViewById(R.id.tv_done);
         if (mTvTitle != null) {
             mImvNavLeft = getView().findViewById(R.id.imv_left);
             mImvNavRight = getView().findViewById(R.id.imv_right);
@@ -102,6 +103,24 @@ public abstract class BaseFragment extends Fragment {
                 imageView.setOnClickListener(listener);
             }
         }
+    }
+
+    public void showNavigation(TextView tvTitle, String title, View.OnClickListener listener) {
+        if (tvTitle != null) {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+            if (listener != null) {
+                tvTitle.setOnClickListener(listener);
+            }
+        }
+    }
+
+    public void showTitleNavRight(String title, View.OnClickListener listener) {
+        showNavigation(mTvNavRight, title, listener);
+    }
+
+    public void hiddenTitleNavRight() {
+        mTvNavRight.setVisibility(View.GONE);
     }
 
     public void showNavLeft(int resId, View.OnClickListener listener) {

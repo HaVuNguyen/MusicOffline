@@ -2,17 +2,19 @@ package com.imusic.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -23,9 +25,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.imusic.R;
 import com.imusic.SongService;
+import com.imusic.callbacks.IMusicCallBack;
+import com.imusic.callbacks.IMusicPlayerCallback;
 import com.imusic.fragment.group.GroupFavoriteFragment;
 import com.imusic.fragment.group.GroupMyMusicFragment;
 import com.imusic.fragment.group.GroupPlaylistFragment;
@@ -40,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IMusicPlayerCallback {
     private RecyclerView mRcMenu;
     private MenuAdapter mMenuAdapter;
     private List<MenuModel> mMenuLists = new ArrayList<>();
@@ -48,24 +55,24 @@ public class MainActivity extends BaseActivity {
 
     public SongService mService;
     private Intent playIntent;
-    private ArrayList<Song> mSongs;
+    private ArrayList<Song> mSongs = new ArrayList<>();
     private TextView mTvNameSong;
     private TextView mTvNameSing;
     private ImageView mImvNext, mImvPlay, mImvPre, mImvSong;
     private ConstraintLayout mLayoutMiniPlayer;
-    private int mPosition;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SongService.SongBinder binder = (SongService.SongBinder) service;
             mService = binder.getService();
-//            mService.setSongs(mSongs);
-//            mService.setPositionSong(mPosition);
+//                mService.setSongs(mSongs);
+//                mService.setPositionSong(mPosition);
 //            mService.playSong();
-//            if (mSongs != null && mSongs.size() > 0) {
-//                updateMiniPlayer(mSongs.get(mPosition));
+//            if (mSong != null) {
+//                updateMiniPlayer(mSong);
 //            }
+            mService.setIMusicPlayerCallbacks(MainActivity.this);
         }
 
         @Override
@@ -75,6 +82,20 @@ public class MainActivity extends BaseActivity {
     };
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    @Override
+    public void onSongPlayer(ArrayList<Song> songs, int position, Song song) {
+        updateMiniPlayer(song,songs,position);
+    }
+
+    @Override
+    public void onPLay(boolean isPlay) {
+        if (isPlay){
+            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+        }else {
+            mLayoutMiniPlayer.setVisibility(View.GONE);
+        }
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private GroupMyMusicFragment mGroupMyMusicFragment;
@@ -198,6 +219,10 @@ public class MainActivity extends BaseActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+            replaceFragment(new GroupMyMusicFragment());
+        }
     }
 
     @Override
@@ -207,7 +232,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initComponents() {
-        checkPermission();
         this.mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         loadMenu();
         replaceFragment(new GroupMyMusicFragment());
@@ -225,53 +249,27 @@ public class MainActivity extends BaseActivity {
 //        mPosition = (int) getIntent().getSerializableExtra(Constant.POSITION_SONG);
     }
 
-//    public void showMiniPlayer(boolean isShow) {
-//        if (isShow) {
-//            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
-//            mImvSong.setImageResource(R.drawable.ic_headphones);
-//        } else {
-//            mLayoutMiniPlayer.setVisibility(View.INVISIBLE);
-//        }
-//        if (mService.isPlaying() || isShow) {
-//            mImvPlay.setImageResource(R.drawable.ic_btn_play);
-//        } else {
-//            mImvPlay.setImageResource(R.drawable.ic_btn_pause);
-//        }
-//    }
-//
-
-    private void updateMiniPlayer(Song song) {
-        mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+    private void updateMiniPlayer(final Song song, final ArrayList<Song> songs, final int position) {
         if (song != null) {
-            mImvSong.setImageResource(R.drawable.ic_headphones);
+            mLayoutMiniPlayer.setVisibility(View.VISIBLE);
+            Glide.with(this).applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.wave_gif)).load(R.drawable.wave_gif).into(mImvSong);
             mTvNameSong.setText(song.getTitle());
             mTvNameSing.setText(song.getArtist());
-            if (isPlaying()) {
-                mImvPlay.setImageResource(R.drawable.ic_btn_play);
-            } else {
-                mImvPlay.setImageResource(R.drawable.ic_btn_pause);
-            }
+
+            mLayoutMiniPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, PLayerActivity.class);
+                    intent.putExtra(Constant.LIST_SONG,songs);
+                    intent.putExtra(Constant.POSITION_SONG,position);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            mLayoutMiniPlayer.setVisibility(View.GONE);
         }
     }
 
-    public void checkPermission() {
-        if (Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, REQUEST_PERMISSIONS);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSIONS) {
-            checkPermission();
-        }
-    }
 
     @Override
     protected void addListener() {
@@ -285,13 +283,6 @@ public class MainActivity extends BaseActivity {
                     mImvPlay.setImageResource(R.drawable.ic_btn_pause);
                     mService.playSong();
                 }
-            }
-        });
-        mLayoutMiniPlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PLayerActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -323,6 +314,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         stopService(playIntent);
+        mService.removeCallBack(MainActivity.this);
         mService = null;
         super.onDestroy();
     }

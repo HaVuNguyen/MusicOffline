@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
     private Context mContext;
     private View mViewTab;
     private View mTabHome, mCurrentTab;
-
+    private TextView mTvNavRight;
 
     protected abstract int initLayout();
 
@@ -163,6 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
         if (mTvTitle != null) {
             mImvNavLeft = findViewById(R.id.imv_left);
             mImvNavRight = findViewById(R.id.imv_right);
+            mTvNavRight = findViewById(R.id.tv_done);
             mTvTitle.setSelected(true);
         }
     }
@@ -173,6 +174,16 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
             imageView.setImageResource(resId);
             if (listener != null) {
                 imageView.setOnClickListener(listener);
+            }
+        }
+    }
+
+    public void showNavigation(TextView tvTitle, String title, View.OnClickListener listener) {
+        if (tvTitle != null) {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+            if (listener != null) {
+                tvTitle.setOnClickListener(listener);
             }
         }
     }
@@ -191,6 +202,14 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerLa
 
     public void hiddenNavLeft() {
         mImvNavLeft.setVisibility(View.GONE);
+    }
+
+    public void showTitleNavRight(String title, View.OnClickListener listener) {
+        showNavigation(mTvNavRight, title, listener);
+    }
+
+    public void hiddenTitleNavRight() {
+        mTvNavRight.setVisibility(View.GONE);
     }
 
     public void setTitle(String title) {

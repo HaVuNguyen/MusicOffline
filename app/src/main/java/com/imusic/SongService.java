@@ -13,6 +13,7 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 
 import com.imusic.callbacks.IMusicCallBack;
+import com.imusic.callbacks.IMusicPlayerCallback;
 import com.imusic.models.Song;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
     private int mPosition;
     private final IBinder songBind = new SongBinder();
     ArrayList<IMusicCallBack> mIMusicCallBacks;
+    ArrayList<IMusicPlayerCallback> mIMusicPlayerCallbacks;
 
     @Override
     public void onCreate() {
@@ -36,10 +38,19 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
         mPlayer = new MediaPlayer();
         initMediaPlayer();
         mIMusicCallBacks = new ArrayList<>();
+        mIMusicPlayerCallbacks = new ArrayList<>();
     }
 
     public void setIMusicCallBacks(IMusicCallBack callBack) {
         mIMusicCallBacks.add(callBack); // lưu call back truyền vào từ tất cả activity
+    }
+
+    public void setIMusicPlayerCallbacks(IMusicPlayerCallback callback) {
+        mIMusicPlayerCallbacks.add(callback);
+    }
+
+    public void removeCallBack(IMusicPlayerCallback callback) {
+        mIMusicPlayerCallbacks.remove(callback);
     }
 
     public void removeCallback(IMusicCallBack callBack) {
@@ -151,6 +162,9 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
         for (IMusicCallBack item : mIMusicCallBacks) {
             item.onCurrentSong(mSongs.get(mPosition), mPosition);
         }
+        for (IMusicPlayerCallback item : mIMusicPlayerCallbacks) {
+            item.onSongPlayer(mSongs, mPosition, mSongs.get(mPosition));
+        }
     }
 
     public int getPosition() {
@@ -169,6 +183,9 @@ public class SongService extends Service implements MediaPlayer.OnPreparedListen
         mPlayer.pause();
         for (IMusicCallBack item : mIMusicCallBacks) {
             item.onPlayOrPause(false);
+        }
+        for (IMusicPlayerCallback item : mIMusicPlayerCallbacks) {
+            item.onPLay(false);
         }
     }
 

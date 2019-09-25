@@ -13,6 +13,8 @@ import com.imusic.fragment.child.favorite.FavoriteViewModel;
 import com.imusic.models.Favorite;
 import com.imusic.models.Song;
 
+import java.util.ArrayList;
+
 public class PlayerFragment extends BaseFragment {
 
     //    private ArrayList<Song> mSongs;
@@ -30,7 +32,7 @@ public class PlayerFragment extends BaseFragment {
     public void setTvNameSong(Song song, int position) {
         mSong = song;
         mPosition = position;
-        if (mSong!=null && mTvNameSong!=null){
+        if (mSong != null && mTvNameSong != null) {
             mTvNameSong.setText(mSong.getTitle());
         }
     }
@@ -38,10 +40,11 @@ public class PlayerFragment extends BaseFragment {
     @Override
     protected void initComponents() {
         mTvNameSong = mView.findViewById(R.id.tv_title_playing);
-        if (mSong!=null){
+        if (mSong != null) {
             mTvNameSong.setText(mSong.getTitle());
         }
         mImvFavorite = mView.findViewById(R.id.imv_favorite);
+        mImvFavorite.setSelected(false);
         mFavoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel.class);
     }
 
@@ -62,6 +65,7 @@ public class PlayerFragment extends BaseFragment {
                         return null;
                     }
                 }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                mImvFavorite.setSelected(false);
             }
         });
     }

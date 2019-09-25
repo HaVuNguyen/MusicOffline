@@ -1,9 +1,12 @@
 package com.imusic.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -21,10 +24,13 @@ import android.widget.TextView;
 import com.imusic.R;
 import com.imusic.SongService;
 import com.imusic.callbacks.IMusicCallBack;
+import com.imusic.callbacks.IMusicPlayerCallback;
 import com.imusic.callbacks.IOnInitFragmentCallBack;
 import com.imusic.fragment.child.my_music.song.SongFragment;
+import com.imusic.fragment.child.recently.RecentlyViewModel;
 import com.imusic.fragment.group.BaseGroupFragment;
 import com.imusic.fragment.player.PlayerFragment;
+import com.imusic.models.Recently;
 import com.imusic.models.Song;
 import com.imusic.ultils.Constant;
 
@@ -33,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
-public class PLayerActivity extends BaseActivity implements View.OnClickListener, IMusicCallBack {
+public class PLayerActivity extends BaseActivity implements View.OnClickListener, IMusicCallBack, IMusicPlayerCallback {
     private ImageView mImvPlay, mImvNext, mImvPre;
     private Handler mHandler;
     public SongService mService;
@@ -48,14 +54,38 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
 
     private SectionPagePlayerAdapter mSectionPagePlayerAdapter;
 
+    private ArrayList<Recently> mRecentlys;
+    private RecentlyViewModel mRecentlyViewModel;
+
     @Override
     public void onCurrentSong(Song song, int position) {
         mSectionPagePlayerAdapter.mPlayerFragment.setTvNameSong(song, position);
-        mSectionPagePlayerAdapter.mSongFragment.setSongPosition(song,position);
+        mSectionPagePlayerAdapter.mSongFragment.setSongPosition(song, position);
+        final long idSong = song.getId();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Recently recently = new Recently();
+                recently.setIdSong(idSong);
+                mRecentlyViewModel.insert(recently);
+                return null;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onPlayOrPause(boolean isPlay) {
+        mSectionPagePlayerAdapter.mSongFragment.setIsPlayOrPause(isPlay);
+    }
+
+    @Override
+    public void onSongPlayer(ArrayList<Song> songs, int position, Song song) {
+        mSectionPagePlayerAdapter.mPlayerFragment.setTvNameSong(song, position);
+        mSectionPagePlayerAdapter.mSongFragment.setSongPosition(song, position);
+    }
+
+    @Override
+    public void onPLay(boolean isPlay) {
         mSectionPagePlayerAdapter.mSongFragment.setIsPlayOrPause(isPlay);
     }
 
@@ -123,6 +153,7 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         update();
+        mRecentlyViewModel = ViewModelProviders.of(this).get(RecentlyViewModel.class);
     }
 
     @Override
@@ -164,7 +195,7 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onInitFragment(boolean isInit) {
                 if (isInit) {
-                    mSectionPagePlayerAdapter.mSongFragment.setListSongPosition(mSongs,mPosition);
+                    mSectionPagePlayerAdapter.mSongFragment.setListSongPosition(mSongs, mPosition);
                 }
             }
         });
@@ -180,9 +211,14 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
     protected void addListener() {
         setTitle(getString(R.string.tv_playing));
         hiddenNavRight();
+        hiddenTitleNavRight();
         showNavLeft(R.drawable.ic_back, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent reIntent = new Intent();
+                reIntent.putExtra(Constant.LIST_SONG, mSongs);
+                reIntent.putExtra(Constant.POSITION_SONG, mPosition);
+                setResult(Activity.RESULT_OK, reIntent);
                 finish();
             }
         });
@@ -229,6 +265,15 @@ public class PLayerActivity extends BaseActivity implements View.OnClickListener
                 mService.nextSong();
                 controlPlaying();
                 break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mService != null) {
+            mService.resume();
+//                mService.pauseSong();
         }
     }
 

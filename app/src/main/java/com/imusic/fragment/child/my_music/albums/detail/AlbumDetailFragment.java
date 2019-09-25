@@ -152,7 +152,7 @@ public class AlbumDetailFragment extends BaseFragment {
         mImvAlbums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, mAlbums.getName(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }

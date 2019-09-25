@@ -31,8 +31,6 @@ import com.imusic.fragment.child.my_music.artists.ArtistViewModel;
 import com.imusic.fragment.child.my_music.artists.details.ArtistDetailViewModel;
 import com.imusic.fragment.child.playlist.details.PlaylistDetailViewModel;
 import com.imusic.listeners.IOnClickSongListener;
-import com.imusic.listeners.OnStartDragListener;
-import com.imusic.listeners.SimpleItemTouchHelperCallback;
 import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
 import com.imusic.models.Artist;
@@ -46,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SongFragment extends BaseFragment implements IOnClickSongListener, OnStartDragListener {
+public class SongFragment extends BaseFragment implements IOnClickSongListener {
 
     private TextView mTvNoData;
     private SongViewModel mSongViewModel;
@@ -68,10 +66,11 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
     private Song mSong;
     private int mPosition;
 
-    public SongFragment(){}
+    public SongFragment() {
+    }
 
     @SuppressLint("ValidFragment")
-    public SongFragment(IOnInitFragmentCallBack callBack){
+    public SongFragment(IOnInitFragmentCallBack callBack) {
         this.mCallBack = callBack;
     }
 
@@ -95,7 +94,7 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
 
         final boolean isAdd = Objects.requireNonNull(getActivity()).getIntent().getBooleanExtra(Constant.TYPE_ADD_SONG, false);
         mPlaylist = (Playlist) getActivity().getIntent().getSerializableExtra(Constant.TYPE_PLAYLIST);
-        mSongAdapter = new SongAdapter(mSongs, isAdd, this, new SongAdapter.IOnAddClickListener() {
+        mSongAdapter = new SongAdapter(mSongs, isAdd, new SongAdapter.IOnAddClickListener() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onAddItem(Song song) {
@@ -120,16 +119,12 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mRcListSong.setAdapter(mSongAdapter);
         mSongAdapter.setOnClickListener(this);
         mSongAdapter.setSongs(mSongs);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSongAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mRcListSong);
         mHandler = new Handler();
         mEdSearch = mView.findViewById(R.id.ed_search);
 
-        if(mCallBack!=null){
+        if (mCallBack != null) {
             mCallBack.onInitFragment(true);
-        }else {
+        } else {
             getSongList();
         }
     }
@@ -349,21 +344,16 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mContext.startActivity(intent);
     }
 
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
-    }
-
     public void setIsPlayOrPause(boolean isPlay) {
         isPlayOrPause = isPlay;
         mSongAdapter.setIsPlayOrPause(isPlayOrPause);
     }
 
-    public void setSongPosition(Song song,int position){
+    public void setSongPosition(Song song, int position) {
         mSong = song;
         mPosition = position;
-        if (mSong!=null && mPosition>=0 && mSongAdapter!=null){
-            mSongAdapter.setPositionSong(mSong,mPosition);
+        if (mSong != null && mPosition >= 0 && mSongAdapter != null) {
+            mSongAdapter.setPositionSong(mSong, mPosition);
         }
     }
 
@@ -372,9 +362,9 @@ public class SongFragment extends BaseFragment implements IOnClickSongListener, 
         mSongAdapter.setSongs(mSongs);
     }
 
-    public void setListSongPosition(ArrayList<Song> songs,int position) {
+    public void setListSongPosition(ArrayList<Song> songs, int position) {
         mSongs = songs;
         mPosition = position;
-        mSongAdapter.setListSongPosition(mSongs,mPosition);
+        mSongAdapter.setListSongPosition(mSongs, mPosition);
     }
 }

@@ -10,5 +10,5 @@
         android:id="@+id/rc_list_song_to_favorite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/dp_7"/>
+        android:layout_margin="@dimen/dp_7" />
 </LinearLayout>

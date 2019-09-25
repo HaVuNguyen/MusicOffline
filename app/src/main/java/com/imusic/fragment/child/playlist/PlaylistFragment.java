@@ -86,5 +86,7 @@ public class PlaylistFragment extends BaseFragment {
                 dialog.show();
             }
         });
+
+        hiddenTitleNavRight();
     }
 }

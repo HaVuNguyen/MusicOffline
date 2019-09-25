@@ -69,7 +69,6 @@ public class AlbumsFragment extends BaseFragment {
         mAlbumAdapter.setIOnClickSongListener(new AlbumAdapter.IOnItemClickListener() {
             @Override
             public void onItemClick(Albums albums, int position) {
-                Toast.makeText(mContext, albums.getName(), Toast.LENGTH_SHORT).show();
                 ((BaseGroupFragment) getParentFragment().getParentFragment()).addFragmentNotReloadContent(AlbumDetailFragment.getInstance(albums));
             }
         });

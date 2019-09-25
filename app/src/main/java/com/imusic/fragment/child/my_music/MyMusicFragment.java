@@ -47,15 +47,24 @@ public class MyMusicFragment extends BaseFragment {
         if (intent) {
             hiddenNavRight();
             setTitle(getString(R.string.tv_add_song_to_playlist));
-            showNavLeft(R.drawable.ic_back, new View.OnClickListener() {
+//            showNavLeft(R.drawable.ic_back, new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getActivity().finish();
+//                }
+//            });
+            showTitleNavRight("DONE", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getActivity().finish();
                 }
             });
+            hiddenNavLeft();
+
         } else {
             setTitle(getString(R.string.tv_my_music));
             hiddenNavRight();
+            hiddenTitleNavRight();
             showNavLeft(R.drawable.ic_menu, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

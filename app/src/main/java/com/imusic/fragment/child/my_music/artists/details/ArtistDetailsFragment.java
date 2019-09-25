@@ -136,7 +136,7 @@ public class ArtistDetailsFragment extends BaseFragment {
         mImvSinger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, mArtist.getName(), Toast.LENGTH_SHORT).show();
+
             }
         });
         mImvBack.setOnClickListener(new View.OnClickListener() {

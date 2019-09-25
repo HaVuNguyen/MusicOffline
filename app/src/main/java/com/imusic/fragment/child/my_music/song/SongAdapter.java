@@ -27,17 +27,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         implements ItemTouchHelperAdapter {
     private ArrayList<Song> mSongs;
     private IOnClickSongListener mListener;
-    private final OnStartDragListener mDragStartListener;
     private IOnAddClickListener mOnAddClickListener;
     private boolean isAdd = false;
     private boolean isPlayOrPause = false;
     private int mPosition = -1;
     private Song mSong;
 
-    SongAdapter(ArrayList<Song> songs, boolean TYPE_IS_ADD, OnStartDragListener listener, IOnAddClickListener onAddClickListener) {
+    SongAdapter(ArrayList<Song> songs, boolean TYPE_IS_ADD, IOnAddClickListener onAddClickListener) {
         this.mSongs = songs;
         isAdd = TYPE_IS_ADD;
-        mDragStartListener = listener;
         mOnAddClickListener = onAddClickListener;
     }
 
@@ -62,17 +60,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
         holder.itemView.setTag(song);
 
         if (!isAdd) {
-            holder.mImvMenu.setImageResource(R.drawable.ic_drag_reorder);
-            holder.mImvMenu.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
-                    }
-                    return false;
-                }
-            });
+            holder.mImvMenu.setVisibility(View.GONE);
         } else {
+            holder.mImvMenu.setVisibility(View.VISIBLE);
             holder.mImvMenu.setImageResource(R.drawable.bg_add);
 
             if (song.isAdded()) {

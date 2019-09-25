@@ -15,6 +15,7 @@ import com.imusic.db.dao.ArtistSongDao;
 import com.imusic.db.dao.FavoriteDao;
 import com.imusic.db.dao.PlaylistDao;
 import com.imusic.db.dao.PlaylistSongDao;
+import com.imusic.db.dao.RecentlyDao;
 import com.imusic.db.dao.SongDao;
 import com.imusic.models.AlbumSong;
 import com.imusic.models.Albums;
@@ -23,9 +24,10 @@ import com.imusic.models.ArtistSong;
 import com.imusic.models.Favorite;
 import com.imusic.models.Playlist;
 import com.imusic.models.PlaylistSong;
+import com.imusic.models.Recently;
 import com.imusic.models.Song;
 
-@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class, AlbumSong.class, ArtistSong.class, PlaylistSong.class, Favorite.class}, version = 1, exportSchema = false)
+@Database(entities = {Song.class, Albums.class, Artist.class, Playlist.class, AlbumSong.class, ArtistSong.class, PlaylistSong.class, Favorite.class, Recently.class}, version = 1, exportSchema = false)
 public abstract class SRDatabase extends RoomDatabase {
     public abstract SongDao mSongDao();
 
@@ -42,6 +44,8 @@ public abstract class SRDatabase extends RoomDatabase {
     public abstract PlaylistSongDao mPlaylistSongDao();
 
     public abstract FavoriteDao mFavoriteDao();
+
+    public abstract RecentlyDao mRecentlyDao();
 
     private static volatile SRDatabase INSTANCE;
 

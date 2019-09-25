@@ -35,6 +35,9 @@ public class Song implements Serializable {
     private long favoriteSongId;
 
     @Ignore
+    private long RecentlyId;
+
+    @Ignore
     public Song(long id, String title, String artist) {
         this.id = id;
         this.title = title;
@@ -117,5 +120,13 @@ public class Song implements Serializable {
 
     public void setFavoriteSongId(long favoriteSongId) {
         this.favoriteSongId = favoriteSongId;
+    }
+
+    public long getRecentlyId() {
+        return RecentlyId;
+    }
+
+    public void setRecentlyId(long recentlyId) {
+        RecentlyId = recentlyId;
     }
 }
